@@ -1,0 +1,1060 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================
+   BASE
+   Global background and text color for dark mode (default).
+   ============================================================= */
+
+html, body {
+  background-color: #09090b !important;
+  color: #f4f4f5 !important;
+}
+
+/* Hides scrollbars while keeping scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* =============================================================
+   CALENDAR MONTH VIEW — DARK MODE
+   ============================================================= */
+
+.dark .cal-month-view,
+.dark .cal-week-view,
+.dark .cal-day-view {
+  background-color: #09090b !important;
+}
+
+.dark .cal-month-view .cal-header .cal-cell {
+  background-color: #09090b !important;
+  color: #f4f4f5 !important;
+  font-weight: 500 !important;
+  border-bottom: 1px solid #27272a !important;
+}
+
+/* Compact weekday names on small screens to prevent truncation */
+@media (max-width: 640px) {
+  .cal-month-view .cal-header .cal-cell {
+    font-size: 0.65rem !important;
+    padding: 4px 1px !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: clip !important;
+  }
+
+  .cal-month-view .cal-day-number {
+    font-size: 0.75rem !important;
+    margin-right: 2px !important;
+  }
+
+  .cal-month-view .cal-cell-row .cal-cell {
+    min-height: 60px !important;
+  }
+}
+
+.cal-month-view .cal-days {
+  border: 1px solid #18181b !important;
+}
+
+.cal-month-view .cal-cell-row .cal-cell {
+  background-color: #09090b !important;
+  border-right: 1px solid #18181b !important;
+}
+
+.cal-month-view .cal-cell-row {
+  border-bottom: 1px solid #18181b !important;
+}
+
+.cal-month-view .cal-day-number {
+  color: #f4f4f5 !important;
+  font-size: 1.1rem !important;
+  opacity: 1 !important;
+}
+
+.cal-month-view .cal-cell:hover,
+.cal-month-view .cal-cell.cal-has-events:hover {
+  background-color: #18181b !important;
+}
+
+/* Days outside the current month appear faded */
+.cal-month-view .cal-out-month .cal-day-number {
+  opacity: 0.15 !important;
+}
+
+.cal-month-view .cal-today {
+  background-color: #1e293b !important;
+}
+
+.cal-month-view .cal-today .cal-day-number {
+  color: #60a5fa !important;
+  font-weight: bold !important;
+}
+
+/* =============================================================
+   CALENDAR WEEK VIEW — DARK MODE
+   ============================================================= */
+
+.cal-week-view .cal-header.cal-today {
+  background-color: #1e293b !important;
+}
+
+.cal-week-view .cal-header .cal-cell {
+  color: #f4f4f5 !important;
+}
+
+.cal-week-view .cal-time-events {
+  border: none !important;
+  border-color: rgba(39, 39, 42, 0.82) !important;
+  background-color: #09090b !important;
+}
+
+.cal-week-view .cal-day-column {
+  border-left: 1px solid rgba(39, 39, 42, 0.82) !important;
+}
+
+.cal-week-view .cal-hour-segment {
+  border-bottom: 1px solid rgba(39, 39, 42, 0.55) !important;
+}
+
+.cal-week-view .cal-hour:not(:last-child) .cal-hour-segment,
+.cal-week-view .cal-hour-segment:hover {
+  background-color: #09090b !important;
+}
+
+.cal-week-view .cal-day-headers .cal-header:hover,
+.cal-week-view .cal-day-headers .cal-header.cal-today:hover {
+  background-color: #18181b !important;
+}
+
+.cal-week-view .cal-day-headers .cal-drag-over {
+  background-color: #18181b !important;
+}
+
+.cal-week-view .cal-hour-odd,
+.cal-week-view .cal-hour-segment,
+.cal-week-view .cal-time-events .cal-day-columns {
+  background-color: #09090b !important;
+}
+
+.cal-week-view .cal-event {
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(148, 163, 184, 0.18) !important;
+  color: #0f172a !important;
+}
+
+.cal-week-view .cal-event:hover {
+  filter: brightness(1.02) saturate(1.02);
+}
+
+.cal-week-view .cal-event .cal-event-title {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.cal-week-view .cal-time-label-column {
+  color: #a1a1aa !important;
+  font-size: 12px !important;
+}
+
+.cal-week-view .cal-day-headers {
+  border: none !important;
+  border-bottom: 1px solid rgba(39, 39, 42, 0.75) !important;
+  border-top: 1px solid rgba(39, 39, 42, 0.55) !important;
+}
+
+.cal-week-view .cal-day-headers .cal-header {
+  border: none !important;
+  border-right: 1px solid rgba(39, 39, 42, 0.55) !important;
+  padding: 10px 0 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.cal-week-view .cal-day-headers .cal-header:last-child {
+  border-right: none !important;
+}
+
+.cal-week-view .cal-day-headers .cal-header .cal-day-number {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  opacity: 0.9 !important;
+}
+
+/* Real weekends only — stronger dark mode highlight */
+.cal-week-view .cal-day-headers .cal-header.cal-day-weekend {
+  color: #ff6b6b !important;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 77, 77, 0.18) 0%,
+    rgba(255, 77, 77, 0.1) 55%,
+    rgba(255, 77, 77, 0.05) 100%
+  ) !important;
+  box-shadow: inset 0 3px 0 rgba(255, 107, 107, 0.95) !important;
+}
+
+.cal-week-view .cal-day-headers .cal-header.cal-day-weekend .cal-day-number {
+  color: #ff7a7a !important;
+  font-weight: 900 !important;
+  font-size: 1.05rem !important;
+  opacity: 1 !important;
+  text-shadow:
+    0 0 10px rgba(255, 107, 107, 0.45),
+    0 0 18px rgba(255, 107, 107, 0.18) !important;
+}
+
+.cal-week-view .cal-day-headers .cal-header.cal-day-weekend b,
+.cal-week-view .cal-day-headers .cal-header.cal-day-weekend span {
+  color: #ff7a7a !important;
+  font-weight: 800 !important;
+  opacity: 1 !important;
+}
+
+.cal-week-view .cal-day-headers .cal-header.cal-day-weekend:not(.cal-today) {
+  border-bottom: 1px solid rgba(255, 107, 107, 0.45) !important;
+}
+
+.cal-week-view .cal-day-columns .cal-day-column.cal-day-weekend,
+.cal-week-view .cal-time-events .cal-day-column.cal-day-weekend {
+  background-color: rgba(255, 77, 77, 0.045) !important;
+}
+
+.cal-week-view .cal-day-columns .cal-day-column.cal-day-weekend .cal-hour-segment,
+.cal-week-view .cal-time-events .cal-day-column.cal-day-weekend .cal-hour-segment {
+  background-color: rgba(255, 77, 77, 0.02) !important;
+}
+
+.cal-week-view .cal-day-columns .cal-day-column.cal-day-weekend:hover,
+.cal-week-view .cal-time-events .cal-day-column.cal-day-weekend:hover {
+  background-color: rgba(255, 77, 77, 0.06) !important;
+}
+
+/* Today column highlighted in blue */
+.cal-week-view .cal-day-headers .cal-header.cal-today {
+  background-color: rgba(59, 130, 246, 0.22) !important;
+  border-radius: 12px 12px 0 0 !important;
+  border-bottom: 2px solid rgba(59, 130, 246, 0.8) !important;
+}
+
+.cal-week-view .cal-day-headers .cal-header.cal-today b,
+.cal-week-view .cal-day-headers .cal-header.cal-today span,
+.cal-week-view .cal-day-headers .cal-header.cal-today .cal-day-number {
+  color: #93c5fd !important;
+  font-weight: 800 !important;
+  opacity: 1 !important;
+}
+
+.cal-week-view .cal-day-columns .cal-day-column.cal-today,
+.cal-week-view .cal-time-events .cal-day-column.cal-today {
+  background-color: rgba(59, 130, 246, 0.03) !important;
+  border-left: 1px solid rgba(59, 130, 246, 0.25) !important;
+}
+
+.cal-week-view .cal-hour-segment:hover {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Current time indicator line */
+.cal-week-view .cal-current-time-marker {
+  background-color: #22c55e !important;
+  height: 2px !important;
+}
+
+.cal-week-view .cal-current-time-marker::before {
+  border-color: #22c55e !important;
+  background-color: #22c55e !important;
+}
+
+/* =============================================================
+   CALENDAR WEEK VIEW — RESPONSIVE (tablet & mobile)
+   Adjusts time labels, header padding and event font size.
+   On mobile (< 640px): 1 day shown via [daysInWeek] binding.
+   On tablet (640–1024px): 3 days shown.
+   On desktop (> 1024px): 7 days shown.
+   ============================================================= */
+
+@media (max-width: 639px) {
+  .cal-week-view .cal-time-label-column {
+    display: none !important;
+  }
+
+  .cal-week-view .cal-day-headers {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  .cal-week-view .cal-time-events {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  .cal-week-view .cal-day-columns,
+  .cal-week-view .cal-day-column {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    position: relative !important;
+  }
+
+  .cal-week-view .cal-hour-segment {
+    position: relative !important;
+    box-sizing: border-box !important;
+    height: 28px !important;
+    padding-left: 52px !important;
+  }
+
+  .cal-week-view .mobile-time-label {
+    position: absolute !important;
+    left: 8px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 38px !important;
+    display: block !important;
+    font-size: 0.65rem !important;
+    line-height: 1 !important;
+    text-align: right !important;
+    color: #a1a1aa !important;
+    z-index: 3 !important;
+    pointer-events: none !important;
+    white-space: nowrap !important;
+  }
+
+  .cal-week-view .cal-events-container {
+    left: 52px !important;
+    width: calc(100% - 52px) !important;
+  }
+
+  .cal-week-view .cal-event-container,
+  .cal-week-view .cal-event {
+    box-sizing: border-box !important;
+  }
+
+  .cal-week-view .cal-event {
+    font-size: 0.7rem !important;
+    overflow: hidden !important;
+  }
+
+  .cal-week-view .cal-day-headers .cal-header {
+    padding: 6px 2px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .cal-week-view .cal-day-headers .cal-header .cal-day-number {
+    font-size: 0.75rem !important;
+  }
+}
+/* =============================================================
+   CUSTOM BUTTON STYLES — DARK MODE
+   ============================================================= */
+
+/* Active view button (Month / Week toggle) */
+.cal-view-btn.active {
+  background-color: #18181b !important;
+  border-color: #10b981 !important;
+  color: #10b981 !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.25) !important;
+}
+
+.cal-today-btn:hover {
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.55) !important;
+}
+
+.cal-action-btn:hover {
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.35) !important;
+}
+
+.cal-ticket-btn:hover {
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.35) !important;
+}
+
+.cal-page-btn:hover {
+  box-shadow: none !important;
+}
+
+/* Destination label shown in the header image overlay */
+.cal-header-destination {
+  color: #ffffff !important;
+}
+
+/* =============================================================
+   LIGHT MODE
+   Activated by adding the class "light-mode" to <body>.
+   ============================================================= */
+
+body.light-mode {
+  background-color: #f8fafc !important;
+  color: #18181b !important;
+}
+
+/* Replace the tinted aurora blobs with a single smooth, bright gradient in light mode.
+   A single gradient (rather than overlapping blurred blobs) avoids the muddy overlap
+   areas while still giving the glass cards something soft to blur against. */
+body.light-mode .fixed.inset-0.z-0.overflow-hidden.pointer-events-none {
+  background: linear-gradient(135deg, #fdf4ff 0%, #eef2ff 35%, #ecfeff 70%, #f0fdfa 100%) !important;
+}
+
+body.light-mode .fixed.inset-0.z-0.overflow-hidden.pointer-events-none > div {
+  opacity: 0 !important;
+}
+
+body.light-mode .cal-header-destination {
+  color: #ffffff !important;
+}
+
+/* Button glow overrides for light mode */
+body.light-mode .cal-today-btn:hover {
+  box-shadow: 0 0 18px rgba(5, 150, 105, 0.5) !important;
+}
+
+body.light-mode .cal-action-btn:hover {
+  box-shadow: 0 0 12px rgba(5, 150, 105, 0.3) !important;
+}
+
+body.light-mode .cal-ticket-btn:hover {
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.3) !important;
+}
+
+/* Surface overrides */
+body.light-mode .bg-zinc-950 {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+
+body.light-mode .border-zinc-800 { border-color: #e4e4e7 !important; }
+body.light-mode .text-zinc-400   { color: #52525b !important; }
+body.light-mode .text-zinc-300   { color: #3f3f46 !important; }
+body.light-mode .text-zinc-200   { color: #18181b !important; }
+body.light-mode .text-white      { color: #18181b !important; }
+
+/* Darken low-contrast secondary text used on the glass cards */
+body.light-mode .text-slate-500 { color: #475569 !important; }
+body.light-mode .text-slate-400 { color: #64748b !important; }
+
+body.light-mode .hover\:bg-zinc-800:hover { background-color: #f1f5f9 !important; }
+body.light-mode .bg-zinc-800              { background-color: #e2e8f0 !important; }
+body.light-mode .bg-zinc-800\/40          { background-color: #f1f5f9 !important; }
+body.light-mode .bg-zinc-800\/60          { background-color: #e8eef7 !important; }
+body.light-mode .bg-zinc-700              { background-color: #e2e8f0 !important; }
+body.light-mode .bg-zinc-900\/50          { background-color: #f8faff !important; }
+body.light-mode .border-zinc-700          { border-color: #cbd5e1 !important; }
+body.light-mode .text-zinc-500            { color: #71717a !important; }
+
+body.light-mode .bg-zinc-900 {
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.07), 0 1px 2px rgba(0,0,0,0.04) !important;
+  border: 1px solid #e0e7ff !important;
+}
+
+/* Full page background override */
+body.light-mode main,
+body.light-mode .min-h-screen,
+body.light-mode [class*="bg-zinc-950"],
+body.light-mode [class*="bg-black"],
+body.light-mode app-root,
+body.light-mode app-root > *,
+body.light-mode router-outlet + * {
+  background-color: #f8fafc !important;
+}
+
+/* =============================================================
+   LIGHT MODE — TRIP CARDS
+   ============================================================= */
+
+body.light-mode .trip-card,
+body.light-mode .trips-section .relative {
+  background-color: #ffffff !important;
+  border-color: #e0e7ff !important;
+}
+
+body.light-mode .trip-card .trip-title    { color: #18181b !important; }
+body.light-mode .trip-card .trip-subtitle { color: #52525b !important; }
+body.light-mode .trip-card .trip-date     { color: #71717a !important; }
+
+body.light-mode .trip-budget,
+body.light-mode [class*="text-emerald"] {
+  color: #059669 !important;
+}
+
+body.light-mode .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12) !important; }
+
+body.light-mode .trip-card .bg-emerald-500 { background-color: #059669 !important; color: #ffffff !important; }
+body.light-mode .trip-card .bg-blue-500    { background-color: #2563eb !important; color: #ffffff !important; }
+body.light-mode .trip-card .bg-zinc-600    { background-color: #3f3f46 !important; color: #ffffff !important; }
+
+body.light-mode .trip-card .bg-emerald-500.text-white,
+body.light-mode .trip-card .bg-blue-500.text-white,
+body.light-mode .trip-card .bg-zinc-600.text-white {
+  color: #ffffff !important;
+}
+
+body.light-mode .trips-section > div.relative {
+  background-color: #ffffff !important;
+  border-color: #e0e7ff !important;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.07) !important;
+}
+
+body.light-mode .trips-section .pointer-events-none { display: none !important; }
+
+body.light-mode .add-trip-btn {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #3f3f46 !important;
+}
+
+body.light-mode .add-trip-btn:hover {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  border-color: #059669 !important;
+  color: #059669 !important;
+  box-shadow: 0 0 12px rgba(5, 150, 105, 0.25) !important;
+}
+
+body.light-mode .trip-card .bg-red-500\/10 { background-color: rgba(239, 68, 68, 0.1) !important; }
+
+body.light-mode .trip-card:hover {
+  border-color: #10b981 !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* =============================================================
+   LIGHT MODE — MINI CALENDAR (dashboard widget)
+   ============================================================= */
+
+body.light-mode .mini-cal {
+  background-color: #f8faff !important;
+  border-color: #e0e7ff !important;
+}
+
+body.light-mode .mini-cal .border-zinc-700\/60 { border-color: #e0e7ff !important; }
+body.light-mode .mini-cal .text-zinc-300        { color: #3f3f46 !important; }
+
+body.light-mode .mini-cal:hover {
+  border-color: #10b981 !important;
+  background-color: rgba(16, 185, 129, 0.05) !important;
+}
+
+body.light-mode .mini-cal:hover .mini-cal-hint { opacity: 1 !important; }
+
+/* =============================================================
+   LIGHT MODE — OVERVIEW CARDS
+   ============================================================= */
+
+body.light-mode a.overview-card:hover {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 10px 15px rgba(59, 130, 246, 0.15) !important;
+}
+body.light-mode a.overview-card:hover h2 { color: #3b82f6 !important; }
+
+body.light-mode div.overview-card:hover {
+  border-color: #10b981 !important;
+  box-shadow: 0 10px 15px rgba(16, 185, 129, 0.15) !important;
+}
+body.light-mode div.overview-card:hover h2  { color: #10b981 !important; }
+body.light-mode div.overview-card:hover svg { color: #10b981 !important; }
+
+/* =============================================================
+   LIGHT MODE — MODAL
+   ============================================================= */
+
+body.light-mode .modal-box,
+body.light-mode [role="dialog"] {
+  background-color: #ffffff !important;
+  border: 1px solid #c7d2fe !important;
+  box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15), 0 4px 16px rgba(0,0,0,0.08) !important;
+  color: #18181b !important;
+}
+
+body.light-mode .modal-box input,
+body.light-mode [role="dialog"] input,
+body.light-mode .modal-box select,
+body.light-mode [role="dialog"] select,
+body.light-mode .modal-box textarea,
+body.light-mode [role="dialog"] textarea {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #94a3b8 !important;
+  color: #18181b !important;
+  color-scheme: light !important;
+}
+
+body.light-mode .modal-box input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+body.light-mode [role="dialog"] input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.4) !important;
+  opacity: 1 !important;
+  cursor: pointer !important;
+}
+
+body.light-mode .modal-box input:focus,
+body.light-mode [role="dialog"] input:focus,
+body.light-mode .modal-box textarea:focus,
+body.light-mode [role="dialog"] textarea:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+  outline: none !important;
+}
+
+body.light-mode .modal-box label,
+body.light-mode [role="dialog"] label {
+  color: #374151 !important;
+  font-weight: 600 !important;
+}
+
+body.light-mode .modal-box .bg-zinc-800,
+body.light-mode [role="dialog"] .bg-zinc-800 {
+  background-color: #f1f5f9 !important;
+}
+
+body.light-mode .fixed.inset-0.bg-black,
+body.light-mode .fixed.inset-0.bg-black\/70,
+body.light-mode .fixed.inset-0 {
+  background-color: rgba(15, 23, 42, 0.75) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+}
+
+body.light-mode .modal-box h3                    { color: #18181b !important; }
+body.light-mode .modal-box .text-zinc-400,
+body.light-mode .modal-box label                 { color: #52525b !important; }
+
+/* =============================================================
+   LIGHT MODE — CALENDAR BUTTONS
+   ============================================================= */
+
+body.light-mode .cal-page-btn {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #3f3f46 !important;
+}
+body.light-mode .cal-page-btn:hover { background-color: #e2e8f0 !important; }
+
+body.light-mode .cal-today-btn       { background-color: #059669 !important; color: #ffffff !important; }
+body.light-mode .cal-today-btn:hover { background-color: #047857 !important; }
+
+body.light-mode .cal-action-btn {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #3f3f46 !important;
+}
+body.light-mode .cal-action-btn:hover {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  border-color: #059669 !important;
+  color: #059669 !important;
+}
+
+body.light-mode .cal-ticket-btn {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #3f3f46 !important;
+}
+body.light-mode .cal-ticket-btn:hover {
+  background-color: rgba(139, 92, 246, 0.1) !important;
+  border-color: #7c3aed !important;
+  color: #7c3aed !important;
+}
+
+body.light-mode .cal-view-btn {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #3f3f46 !important;
+}
+body.light-mode .cal-view-btn:hover { background-color: #e2e8f0 !important; }
+
+body.light-mode .cal-view-btn.active {
+  background-color: #e0e7ff !important;
+  border-color: #6366f1 !important;
+  color: #4f46e5 !important;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.2) !important;
+}
+
+/* =============================================================
+   LIGHT MODE — CALENDAR VIEWS
+   ============================================================= */
+
+body.light-mode .cal-month-view,
+body.light-mode .cal-week-view,
+body.light-mode .cal-day-view {
+  background-color: #ffffff !important;
+  border-radius: 12px !important;
+}
+
+body.light-mode .cal-month-view .cal-header .cal-cell {
+  background-color: #f8faff !important;
+  color: #18181b !important;
+  border-bottom: 1px solid #e0e7ff !important;
+}
+
+body.light-mode .cal-month-view .cal-days               { border: 1px solid #e0e7ff !important; }
+body.light-mode .cal-month-view .cal-cell-row .cal-cell { background-color: #ffffff !important; border-right: 1px solid #e0e7ff !important; }
+body.light-mode .cal-month-view .cal-cell-row           { border-bottom: 1px solid #e0e7ff !important; }
+body.light-mode .cal-month-view .cal-day-number         { color: #18181b !important; }
+
+body.light-mode .cal-month-view .cal-cell:hover,
+body.light-mode .cal-month-view .cal-cell.cal-has-events:hover { background-color: #eef2ff !important; }
+
+body.light-mode .cal-month-view .cal-out-month .cal-day-number { opacity: 0.3 !important; }
+body.light-mode .cal-month-view .cal-today                     { background-color: #e0e7ff !important; }
+body.light-mode .cal-month-view .cal-today .cal-day-number     { color: #4f46e5 !important; font-weight: bold !important; }
+
+body.light-mode .cal-week-view .cal-header.cal-today   { background-color: #e0e7ff !important; }
+body.light-mode .cal-week-view .cal-header .cal-cell   { color: #18181b !important; }
+body.light-mode .cal-week-view .cal-time-events        { border-color: #e0e7ff !important; background-color: #ffffff !important; }
+body.light-mode .cal-week-view .cal-day-column         { border-left: 1px solid #e0e7ff !important; }
+body.light-mode .cal-week-view .cal-hour-segment       { border-bottom: 1px solid #e0e7ff !important; }
+
+body.light-mode .cal-week-view .cal-hour:not(:last-child) .cal-hour-segment,
+body.light-mode .cal-week-view .cal-hour-segment:hover { background-color: #f8faff !important; }
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header:hover,
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-today:hover { background-color: #eef2ff !important; }
+
+body.light-mode .cal-week-view .cal-hour-odd,
+body.light-mode .cal-week-view .cal-hour-segment,
+body.light-mode .cal-week-view .cal-time-events .cal-day-columns { background-color: #ffffff !important; }
+
+body.light-mode .cal-week-view .cal-event {
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(99, 102, 241, 0.18) !important;
+  color: #0f172a !important;
+}
+
+body.light-mode .cal-week-view .cal-event:hover              { filter: brightness(1.01) saturate(1.01); }
+body.light-mode .cal-week-view .cal-event .cal-event-title   { color: #0f172a !important; }
+body.light-mode .cal-week-view .cal-time-label-column        { color: #64748b !important; }
+body.light-mode .cal-week-view .cal-day-headers              { border-bottom: 1px solid #e0e7ff !important; }
+body.light-mode .cal-week-view .cal-day-headers .cal-header  { border-right: 1px solid #e0e7ff !important; }
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header .cal-day-number {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  opacity: 0.95 !important;
+}
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-today {
+  background-color: rgba(99, 102, 241, 0.12) !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-day-weekend {
+  color: #dc2626 !important;
+}
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-day-weekend .cal-day-number {
+  color: #ef4444 !important;
+  font-weight: 700 !important;
+  opacity: 1 !important;
+}
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-day-weekend b,
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-day-weekend span {
+  color: #ef4444 !important;
+  font-weight: 700 !important;
+  opacity: 1 !important;
+}
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-day-weekend:not(.cal-today) {
+  background-color: rgba(239, 68, 68, 0.05) !important;
+}
+
+body.light-mode .cal-week-view .cal-day-columns .cal-day-column.cal-day-weekend,
+body.light-mode .cal-week-view .cal-time-events .cal-day-column.cal-day-weekend {
+  background-color: rgba(239, 68, 68, 0.025) !important;
+}
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-day-weekend {
+  color: #dc2626 !important;
+}
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-day-weekend .cal-day-number {
+  color: #ef4444 !important;
+  font-weight: 700 !important;
+  opacity: 1 !important;
+}
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-day-weekend b,
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-day-weekend span {
+  color: #ef4444 !important;
+  font-weight: 700 !important;
+  opacity: 1 !important;
+}
+
+body.light-mode .cal-week-view .cal-day-headers .cal-header.cal-day-weekend:not(.cal-today) {
+  background-color: rgba(239, 68, 68, 0.05) !important;
+}
+
+body.light-mode .cal-week-view .cal-day-columns .cal-day-column.cal-day-weekend,
+body.light-mode .cal-week-view .cal-time-events .cal-day-column.cal-day-weekend {
+  background-color: rgba(239, 68, 68, 0.025) !important;
+}
+
+body.light-mode .cal-week-view .cal-current-time-marker        { background-color: #16a34a !important; height: 2px !important; }
+body.light-mode .cal-week-view .cal-current-time-marker::before { border-color: #16a34a !important; background-color: #16a34a !important; }
+
+/* =============================================================
+   LIGHT MODE — BUDGET PLANNER
+   ============================================================= */
+
+/* KPI summary cards at the top */
+body.light-mode .kpi-card {
+  background-color: #ffffff !important;
+  border-color: #e4e4e7 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07) !important;
+  color: #18181b !important;
+}
+body.light-mode .kpi-card .text-xs          { color: #71717a !important; }
+body.light-mode .kpi-card .text-2xl         { color: #18181b !important; }
+body.light-mode .kpi-card .text-red-500,
+body.light-mode .kpi-card .text-red-400     { color: #ef4444 !important; }
+body.light-mode .kpi-card .text-emerald-600,
+body.light-mode .kpi-card .text-emerald-400 { color: #059669 !important; }
+
+/* Hover states for balance and over-budget KPI cards */
+body.light-mode button.kpi-card:nth-child(3):hover {
+  background-color: #ecfdf5 !important;
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(5,150,105,0.15), 0 4px 20px rgba(5,150,105,0.3) !important;
+}
+body.light-mode button.kpi-card:nth-child(3):hover .text-xs { color: #059669 !important; }
+
+body.light-mode button.kpi-card:nth-child(4):hover {
+  background-color: #fff1f2 !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.15), 0 4px 20px rgba(239,68,68,0.3) !important;
+}
+body.light-mode button.kpi-card:nth-child(4):hover .text-xs { color: #dc2626 !important; }
+
+body.light-mode app-budget .rounded-2xl {
+  background-color: #ffffff !important;
+  border-color: #e4e4e7 !important;
+}
+
+/* Trip group cards in the budget list */
+body.light-mode .budget-list > div,
+body.light-mode .budget-list .rounded-2xl {
+  background-color: #ffffff !important;
+  border-color: #e4e4e7 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .budget-list button.w-full        { color: #18181b !important; }
+body.light-mode .budget-list button.w-full:hover  { background-color: #f4f4f5 !important; }
+body.light-mode .budget-list button.w-full span   { color: #3f3f46 !important; }
+
+body.light-mode .budget-list span.rounded-full,
+body.light-mode .budget-list .bg-zinc-100.rounded-full,
+body.light-mode .budget-list .bg-zinc-800.rounded-full {
+  background-color: #e4e4e7 !important;
+  border-color: #d4d4d8 !important;
+  color: #52525b !important;
+}
+
+/* Individual budget card */
+body.light-mode .budget-card > div            { background-color: #ffffff !important; }
+body.light-mode .budget-card > div:hover      { background-color: #fafafa !important; }
+body.light-mode .budget-card h3               { color: #18181b !important; }
+body.light-mode .budget-card p                { color: #71717a !important; }
+body.light-mode .budget-card .text-zinc-400   { color: #a1a1aa !important; }
+
+/* Budget remaining badge — green (within budget) */
+body.light-mode .budget-card .bg-emerald-100                           { background-color: rgba(5, 150, 105, 0.1) !important; }
+body.light-mode .budget-card .text-emerald-700                         { color: #059669 !important; }
+body.light-mode .budget-card .bg-emerald-100.text-emerald-700,
+body.light-mode .budget-card [class*="bg-emerald"][class*="text-emerald"] {
+  color: #059669 !important;
+  background-color: rgba(5, 150, 105, 0.12) !important;
+}
+
+/* Budget remaining badge — red (over budget) */
+body.light-mode .budget-card .bg-red-100                           { background-color: rgba(239, 68, 68, 0.1) !important; }
+body.light-mode .budget-card .text-red-600                         { color: #dc2626 !important; }
+body.light-mode .budget-card .bg-red-100.text-red-600,
+body.light-mode .budget-card [class*="bg-red"][class*="text-red"]  {
+  color: #dc2626 !important;
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+body.light-mode .budget-card span.text-emerald-400 { color: #059669 !important; }
+body.light-mode .budget-card span.text-red-400     { color: #dc2626 !important; }
+body.light-mode .budget-card .rounded-full.text-xs { color: inherit !important; }
+
+/* Progress bar track */
+body.light-mode .budget-card .bg-zinc-100,
+body.light-mode .budget-card .bg-zinc-800 { background-color: #f1f1f1 !important; }
+
+body.light-mode .budget-list .divide-y > *,
+body.light-mode .budget-list .border-t    { border-color: #f4f4f5 !important; }
+
+/* Edit and delete icon buttons on budget cards */
+body.light-mode .budget-card button.w-7 {
+  background-color: #f4f4f5 !important;
+  border-color: #e4e4e7 !important;
+  color: #71717a !important;
+}
+body.light-mode .budget-card button.w-7:hover {
+  background-color: #fee2e2 !important;
+  border-color: #fca5a5 !important;
+  color: #ef4444 !important;
+}
+/* Edit button stays neutral on hover */
+body.light-mode .budget-card button.w-7:first-of-type:hover {
+  background-color: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  color: #18181b !important;
+}
+
+/* Expanded cost section inside a budget card */
+body.light-mode [id^="expanded-"] {
+  background-color: #f8fafc !important;
+  border-color: #f1f5f9 !important;
+}
+body.light-mode [id^="expanded-"] h4                           { color: #71717a !important; }
+body.light-mode [id^="expanded-"] .rounded-xl                  { background-color: #ffffff !important; border-color: #e4e4e7 !important; }
+body.light-mode [id^="expanded-"] .rounded-xl p                { color: #18181b !important; }
+body.light-mode [id^="expanded-"] .rounded-xl .text-zinc-400   { color: #a1a1aa !important; }
+
+body.light-mode [id^="expanded-"] button.flex-1 {
+  color: #52525b !important;
+  border-color: #d4d4d8 !important;
+  background-color: #f9fafb !important;
+}
+body.light-mode [id^="expanded-"] button.flex-1:hover {
+  background-color: #f0fdf4 !important;
+  border-color: #6ee7b7 !important;
+  color: #059669 !important;
+}
+
+/* Expanded input fields */
+body.light-mode [id^="expanded-"] input {
+  color: #18181b !important;
+  background-color: #f4f4f5 !important;
+  border-color: #d4d4d8 !important;
+}
+body.light-mode [id^="expanded-"] input::placeholder { color: #a1a1aa !important; }
+body.light-mode [id^="expanded-"] input:focus {
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 2px rgba(5,150,105,0.15) !important;
+  outline: none !important;
+}
+
+/* AI suggestions panel — close button turns red on hover */
+body.light-mode [id^="ai-suggestions-"] button {
+  background-color: #f4f4f5 !important;
+  border-color: #e4e4e7 !important;
+  color: #71717a !important;
+}
+body.light-mode [id^="ai-suggestions-"] button:hover {
+  background-color: #fee2e2 !important;
+  border-color: #fca5a5 !important;
+  color: #ef4444 !important;
+}
+
+/* AI suggestions panel — add buttons are green */
+body.light-mode [id^="ai-suggestions-"] .grid button {
+  background-color: rgba(5, 150, 105, 0.1) !important;
+  border-color: rgba(5, 150, 105, 0.3) !important;
+  color: #059669 !important;
+}
+body.light-mode [id^="ai-suggestions-"] .grid button:hover {
+  background-color: rgba(5, 150, 105, 0.2) !important;
+  border-color: #059669 !important;
+  color: #047857 !important;
+}
+
+/* Save button inside cost form */
+body.light-mode .cost-form button.bg-emerald-500 {
+  background-color: #059669 !important;
+  color: #ffffff !important;
+  border: 1px solid #059669 !important;
+}
+body.light-mode .cost-form button.bg-emerald-500:hover {
+  background-color: #047857 !important;
+  box-shadow: 0 0 0 3px rgba(5,150,105,0.2), 0 0 14px rgba(5,150,105,0.35) !important;
+}
+
+/* Update button inside modal */
+body.light-mode .modal-box button.bg-emerald-500 {
+  background-color: #059669 !important;
+  color: #ffffff !important;
+  border: 1px solid #059669 !important;
+}
+body.light-mode .modal-box button.bg-emerald-500:hover {
+  background-color: #047857 !important;
+  box-shadow: 0 0 0 3px rgba(5,150,105,0.2), 0 0 14px rgba(5,150,105,0.35) !important;
+}
+
+/* =============================================================
+   LIGHT MODE — BUDGET OVERVIEW / DONUT CHART SECTION
+   ============================================================= */
+
+body.light-mode .donut-section .rounded-2xl {
+  background-color: #ffffff !important;
+  border-color: #e4e4e7 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+}
+
+body.light-mode .donut-section .text-xs      { color: #71717a !important; }
+body.light-mode .donut-section .text-white,
+body.light-mode .donut-section .text-zinc-200 { color: #18181b !important; }
+body.light-mode .donut-section .text-zinc-400 { color: #71717a !important; }
+body.light-mode .donut-section .text-zinc-500 { color: #71717a !important; }
+body.light-mode .donut-section .text-zinc-300 { color: #52525b !important; }
+body.light-mode .donut-section .text-zinc-900 { color: #18181b !important; }
+body.light-mode .donut-section .text-xl       { color: #18181b !important; }
+body.light-mode .donut-section svg circle:first-child { stroke: #e4e4e7 !important; }
+
+body.light-mode .donut-section button.w-full        { color: #18181b !important; }
+body.light-mode .donut-section button.w-full:hover  { background-color: #f4f4f5 !important; }
+body.light-mode .donut-section .border-t,
+body.light-mode .donut-section .divide-y > *        { border-color: #f4f4f5 !important; }
+body.light-mode .donut-section .hover\:bg-zinc-800\/20:hover { background-color: #f9fafb !important; }
+
+body.light-mode .donut-section span.rounded-full,
+body.light-mode .donut-section .bg-zinc-100,
+body.light-mode .donut-section .bg-zinc-800.rounded-full {
+  background-color: #e4e4e7 !important;
+  border-color: #d4d4d8 !important;
+  color: #52525b !important;
+}
+
+/* =============================================================
+   LIGHT MODE — BUDGET DETAIL VIEW
+   ============================================================= */
+
+body.light-mode .detail-view                       { color: #18181b !important; }
+body.light-mode .detail-view .text-zinc-900        { color: #18181b !important; }
+body.light-mode .detail-view .text-zinc-500,
+body.light-mode .detail-view .text-zinc-400        { color: #71717a !important; }
+body.light-mode .detail-view .text-emerald-700,
+body.light-mode .detail-view .text-emerald-300     { color: #059669 !important; }
+body.light-mode .detail-view .text-red-600,
+body.light-mode .detail-view .text-red-300         { color: #dc2626 !important; }
+body.light-mode .detail-view .bg-emerald-50        { background-color: #f0fdf4 !important; }
+body.light-mode .detail-view .border-emerald-200   { border-color: #a7f3d0 !important; }
+body.light-mode .detail-view .bg-red-50            { background-color: #fff1f2 !important; }
+body.light-mode .detail-view .border-red-200       { border-color: #fecaca !important; }
+
+body.light-mode .budget-list h2,
+body.light-mode .donut-section h2 { color: #18181b !important; }
+
+/* --- FIX: Kalender Zeilen-Hover im Dark Mode --- */
+.dark .cal-month-view .cal-cell-row:hover {
+  background-color: transparent !important;
+}
+
+.dark .cal-month-view .cal-cell:hover,
+.dark .cal-month-view .cal-cell.cal-has-events:hover,
+.dark .cal-month-view .cal-day-cell:hover {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+.dark .cal-month-view .cal-open-day-events {
+  background-color: #09090b !important;
+  border-color: #27272a !important;
+}

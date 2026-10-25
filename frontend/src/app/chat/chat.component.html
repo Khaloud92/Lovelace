@@ -1,0 +1,111 @@
+<div class="min-h-screen relative text-slate-900 dark:text-white font-sans overflow-x-hidden">
+
+  <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-slate-50 dark:bg-[#09090b] transition-colors duration-500">
+    <div class="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-fuchsia-400 opacity-30 dark:opacity-60 dark:bg-fuchsia-600/30 blur-[120px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+    <div class="absolute top-[20%] -right-[10%] w-[45vw] h-[45vw] rounded-full bg-cyan-300 opacity-40 dark:opacity-60 dark:bg-cyan-500/20 blur-[120px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+    <div class="absolute -bottom-[20%] left-[20%] w-[60vw] h-[60vw] rounded-full bg-indigo-400 opacity-30 dark:opacity-50 dark:bg-indigo-600/30 blur-[140px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+  </div>
+
+  <div class="relative z-10 max-w-4xl mx-auto px-6 pb-8 flex flex-col h-[calc(100vh-6rem)] pt-32">
+    <div class="flex items-center justify-between mb-6">
+      <a routerLink="/chats" class="text-sm font-bold text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors">← Back to chats</a>
+      @if (isGroup) {
+        <button (click)="toggleTripModal()" class="flex items-center gap-1 px-4 py-2 rounded-full bg-gradient-to-br from-white/60 to-white/30 dark:from-white/20 dark:to-white/5 hover:from-white/80 hover:to-white/50 dark:hover:from-white/30 dark:hover:to-white/10 backdrop-blur-2xl border border-white/60 dark:border-white/30 shadow-sm dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),0_8px_32px_rgba(0,0,0,0.3)] text-slate-800 dark:text-white text-sm font-extrabold transition-all">
+          <span class="text-lg leading-none text-emerald-600 dark:text-emerald-400">+</span> Group trip
+        </button>
+      }
+    </div>
+
+    <!-- Chat View Area (Glass Panel) -->
+    <div class="flex-1 overflow-y-auto space-y-4 pr-2 p-6 bg-white/40 dark:bg-white/5 backdrop-blur-3xl border border-white/60 dark:border-white/20 rounded-3xl shadow-xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)]">
+      @if (messages.length === 0) {
+        <p class="text-center text-sm font-medium text-slate-500 dark:text-zinc-400 mt-10">No messages yet. Say hi 👋</p>
+      }
+      @for (m of messages; track m.id) {
+        @if (m.trip; as trip) {
+          <div class="bg-white/60 dark:bg-black/40 border border-emerald-400/50 dark:border-emerald-500/30 rounded-2xl p-5 shadow-sm backdrop-blur-md">
+            <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-1.5 uppercase tracking-wide">🌍 Group trip proposed by {{ trip.proposedByName }}</p>
+            <p class="text-lg font-extrabold text-slate-900 dark:text-white drop-shadow-sm">{{ trip.title }}</p>
+            <p class="text-sm font-medium text-slate-600 dark:text-zinc-300 mt-1">{{ trip.destination }} · {{ trip.startDate | date:'mediumDate' }} – {{ trip.endDate | date:'mediumDate' }}</p>
+            @if (trip.description) { <p class="text-sm text-slate-500 dark:text-zinc-400 mt-2 whitespace-pre-wrap">{{ trip.description }}</p> }
+
+            <div class="flex flex-wrap gap-2 mt-4">
+              @for (p of trip.participants; track p.userId) {
+                <span class="text-xs font-bold px-3 py-1 rounded-full border shadow-inner backdrop-blur-md"
+                      [ngClass]="{'border-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400': p.status === 'ACCEPTED', 'border-red-400 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400': p.status === 'DECLINED', 'border-slate-300 dark:border-white/10 bg-white/50 dark:bg-black/20 text-slate-600 dark:text-zinc-400': p.status === 'PENDING'}">
+                  {{ p.userName }} · {{ p.status === 'ACCEPTED' ? 'going' : p.status === 'DECLINED' ? 'declined' : 'pending' }}
+                </span>
+              }
+            </div>
+
+            @if (myTripStatus(trip) === 'PENDING') {
+              <div class="flex gap-3 mt-5">
+                <button (click)="respondToTrip(trip, 'ACCEPTED')" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500/80 dark:hover:bg-emerald-400 border border-emerald-600/50 dark:border-emerald-400/50 shadow-md text-white font-bold text-sm transition-all">Accept</button>
+                <button (click)="respondToTrip(trip, 'DECLINED')" class="px-5 py-2 rounded-xl bg-slate-200 dark:bg-white/10 hover:bg-slate-300 dark:hover:bg-white/20 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-white font-bold text-sm transition-all shadow-sm">Decline</button>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="flex" [class.justify-end]="m.senderId === myUserId">
+            <div class="max-w-[75%] rounded-2xl px-5 py-3 shadow-md backdrop-blur-md border"
+                 [ngClass]="m.senderId === myUserId ? 'bg-emerald-500 dark:bg-emerald-500/80 border-emerald-400/50 text-white rounded-tr-sm' : 'bg-white/80 dark:bg-black/40 border-white/80 dark:border-white/10 text-slate-900 dark:text-white rounded-tl-sm'">
+              @if (m.senderId !== myUserId) { <p class="text-xs font-bold text-slate-500 dark:text-zinc-400 mb-1">{{ m.senderName }}</p> }
+              <p class="whitespace-pre-wrap break-words font-medium text-sm">{{ m.content }}</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Chat Input (Glass) -->
+    <form (ngSubmit)="send()" class="mt-4 flex gap-3">
+      <input [(ngModel)]="draft" name="draft" placeholder="Type a message…" autocomplete="off" class="flex-1 rounded-2xl bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 px-5 py-3.5 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-zinc-500 focus:outline-none focus:border-emerald-500 shadow-sm dark:shadow-inner backdrop-blur-xl transition-colors font-medium text-sm" />
+      <button type="submit" class="px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500/80 dark:hover:bg-emerald-400 border border-emerald-600/50 dark:border-emerald-400/50 shadow-md dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl text-white font-bold text-sm transition-all">Send</button>
+    </form>
+
+    <!-- Modals -->
+    @if (showTripModal || showBudgetModal) {
+      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+      <div class="fixed inset-0 bg-slate-900/20 dark:bg-black/40 grid place-items-center z-50 backdrop-blur-md transition-all px-4" (click)="showTripModal ? toggleTripModal() : closeBudgetModal()">
+      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+        <div class="bg-white/90 dark:bg-white/5 backdrop-blur-3xl border border-white dark:border-white/20 rounded-3xl p-8 w-full max-w-md shadow-2xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.5)] transition-all" (click)="$event.stopPropagation()">
+          @if (showTripModal) {
+            <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-6 drop-shadow-sm">Propose a group trip</h3>
+            @if (tripError) { <div class="mb-4 rounded-xl bg-red-100 dark:bg-red-500/10 border border-red-300 dark:border-red-500/30 px-4 py-3 text-sm font-bold text-red-600 dark:text-red-400">{{ tripError }}</div> }
+
+            <div class="space-y-4">
+              <input [(ngModel)]="tripTitle" placeholder="Trip title…" class="w-full rounded-xl bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 px-4 py-3 text-slate-900 dark:text-white text-sm font-medium outline-none focus:border-emerald-500 shadow-inner backdrop-blur-md" />
+              <input [(ngModel)]="tripDestination" placeholder="Destination…" class="w-full rounded-xl bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 px-4 py-3 text-slate-900 dark:text-white text-sm font-medium outline-none focus:border-emerald-500 shadow-inner backdrop-blur-md" />
+              <div class="flex gap-3">
+                <label class="flex-1 text-xs font-bold text-slate-600 dark:text-zinc-400 uppercase tracking-wider">Start<input type="date" [(ngModel)]="tripStartDate" class="w-full rounded-xl bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 px-4 py-3 mt-1.5 text-slate-900 dark:text-white outline-none focus:border-emerald-500 shadow-inner dark:[&::-webkit-calendar-picker-indicator]:invert" /></label>
+                <label class="flex-1 text-xs font-bold text-slate-600 dark:text-zinc-400 uppercase tracking-wider">End<input type="date" [(ngModel)]="tripEndDate" [min]="tripStartDate" class="w-full rounded-xl bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 px-4 py-3 mt-1.5 text-slate-900 dark:text-white outline-none focus:border-emerald-500 shadow-inner dark:[&::-webkit-calendar-picker-indicator]:invert" /></label>
+              </div>
+              <textarea [(ngModel)]="tripDescription" placeholder="Description (optional)…" rows="3" class="w-full rounded-xl bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 px-4 py-3 text-slate-900 dark:text-white text-sm font-medium outline-none focus:border-emerald-500 shadow-inner backdrop-blur-md"></textarea>
+            </div>
+
+            <div class="flex gap-3 mt-6">
+              <button (click)="toggleTripModal()" class="flex-1 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 backdrop-blur-md text-slate-700 dark:text-zinc-300 font-bold py-3 rounded-xl shadow-sm text-sm transition-all">Cancel</button>
+              <button (click)="proposeTrip()" [disabled]="!tripFormValid" class="flex-1 bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500/80 dark:hover:bg-emerald-400 border border-emerald-600/50 dark:border-emerald-400/50 text-white font-bold py-3 rounded-xl shadow-md backdrop-blur-xl disabled:opacity-40 text-sm transition-all">Send to chat</button>
+            </div>
+          }
+
+          @if (showBudgetModal) {
+            <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2 drop-shadow-sm">You're going! 🎉</h3>
+            <p class="text-sm font-medium text-slate-600 dark:text-zinc-400 mb-6">“{{ budgetTripTitle }}” was added to your calendar. Set up your budget now.</p>
+            @if (budgetError) { <div class="mb-4 rounded-xl bg-red-100 dark:bg-red-500/10 border border-red-300 dark:border-red-500/30 px-4 py-3 text-sm font-bold text-red-600 dark:text-red-400">{{ budgetError }}</div> }
+
+            <div class="space-y-4">
+              <label class="block text-xs font-bold text-slate-600 dark:text-zinc-400 uppercase tracking-wider">Budget name<input [(ngModel)]="budgetName" class="w-full rounded-xl bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 px-4 py-3 mt-1.5 text-slate-900 dark:text-white text-sm font-medium outline-none focus:border-emerald-500 shadow-inner backdrop-blur-md" /></label>
+              <label class="block text-xs font-bold text-slate-600 dark:text-zinc-400 uppercase tracking-wider">Amount<input type="number" min="0" step="0.01" [(ngModel)]="budgetAmount" placeholder="0.00" class="w-full rounded-xl bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 px-4 py-3 mt-1.5 text-slate-900 dark:text-white text-sm font-medium outline-none focus:border-emerald-500 shadow-inner backdrop-blur-md" /></label>
+            </div>
+
+            <div class="flex gap-3 mt-8">
+              <button (click)="closeBudgetModal()" class="flex-1 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 backdrop-blur-md text-slate-700 dark:text-zinc-300 font-bold py-3 rounded-xl shadow-sm text-sm transition-all">Skip</button>
+              <button (click)="createBudget()" [disabled]="!budgetFormValid" class="flex-1 bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500/80 dark:hover:bg-emerald-400 border border-emerald-600/50 dark:border-emerald-400/50 text-white font-bold py-3 rounded-xl shadow-md backdrop-blur-xl disabled:opacity-40 text-sm transition-all">Create budget</button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

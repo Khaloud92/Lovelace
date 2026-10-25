@@ -1,0 +1,72 @@
+@if (isVisible) {
+  <div class="tutorial-layer">
+    <div class="tutorial-dim"></div>
+
+    @if (targetBox) {
+      <div
+        class="tutorial-highlight"
+        [style.top.px]="targetBox.top"
+        [style.left.px]="targetBox.left"
+        [style.width.px]="targetBox.width"
+        [style.height.px]="targetBox.height"
+      >
+        <span class="tutorial-highlight-icon">
+          {{ currentStep.icon }}
+        </span>
+      </div>
+    }
+
+    <section
+      class="tutorial-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tutorial-title"
+      [style.top.px]="cardPosition?.top"
+      [style.left.px]="cardPosition?.left"
+    >
+      <button class="tutorial-skip" type="button" (click)="skipTutorial()">
+        Skip
+      </button>
+
+      <p class="tutorial-progress">
+        Step {{ currentStepIndex + 1 }} of {{ steps.length }}
+      </p>
+
+      <h2 id="tutorial-title" class="tutorial-title">
+        {{ currentStep.title }}
+      </h2>
+
+      <p class="tutorial-description">
+        {{ currentStep.description }}
+      </p>
+
+      <div class="tutorial-dots" aria-hidden="true">
+        @for (step of steps; track $index) {
+          <span
+            class="tutorial-dot"
+            [ngClass]="{ active: $index === currentStepIndex }"
+          ></span>
+        }
+      </div>
+
+      <div class="tutorial-actions">
+        <button
+          class="tutorial-button secondary"
+          type="button"
+          (click)="previousStep()"
+          [disabled]="isFirstStep"
+        >
+          Back
+        </button>
+
+        <button
+          class="tutorial-button primary"
+          type="button"
+          (click)="nextStep()"
+        >
+          {{ isLastStep ? 'Finish' : 'Next' }}
+        </button>
+      </div>
+    </section>
+  </div>
+}

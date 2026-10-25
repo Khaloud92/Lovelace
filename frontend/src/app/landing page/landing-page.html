@@ -1,0 +1,127 @@
+<div class="min-h-screen bg-zinc-950 text-white font-sans overflow-x-hidden">
+
+  <img id="flying-logo" src="/logo.svg" alt="Lovelace Travel Logo" class="fixed top-3 left-1/2 -translate-x-1/2 h-10 z-[100] origin-top">
+
+  <nav class="fixed top-0 w-full z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 h-full cursor-pointer" routerLink="/home">
+        <span class="font-bold text-lg tracking-wide bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent hidden md:block">Lovelace Travel</span>
+      </div>
+      <div class="flex items-center space-x-6 text-sm font-medium">
+        <a routerLink="/login" class="text-zinc-400 hover:text-white transition-colors">Log in</a>
+        <a routerLink="/register" class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-full transition-colors text-white">Sign up</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="intro-section h-screen flex flex-col justify-center items-center relative z-20 bg-zinc-950 pt-16">
+    <div class="relative w-[90vw] h-[60vh] md:w-[800px] md:h-[800px] flex justify-center items-center">
+      <spline-viewer
+        url="https://prod.spline.design/Yv3kwxa1sTm9e1mD/scene.splinecode"
+        class="w-full h-full pointer-events-none">
+      </spline-viewer>
+    </div>
+  </section>
+
+  <section class="marquee-section h-screen relative flex flex-col justify-center items-center overflow-hidden bg-zinc-950 z-10">
+
+    <div class="relative flex flex-col justify-center gap-2 md:gap-4 w-full">
+
+      <div class="city-marquee flex w-max gap-8 text-6xl md:text-[5rem] leading-none font-black text-zinc-700 uppercase tracking-widest opacity-50">
+        <div class="flex gap-8">
+          <span>Istanbul</span><span>New York</span><span>Tokyo</span><span>Berlin</span><span>Frankfurt</span><span>Moscow</span><span>Milan</span>
+        </div>
+        <div class="flex gap-8">
+          <span>Istanbul</span><span>New York</span><span>Tokyo</span><span>Berlin</span><span>Frankfurt</span><span>Moscow</span><span>Milan</span>
+        </div>
+      </div>
+
+      <div class="city-marquee flex w-max gap-8 text-6xl md:text-[5rem] leading-none font-black text-zinc-700 uppercase tracking-widest opacity-50 -ml-40">
+        <div class="flex gap-8">
+          <span>Paris</span><span>London</span><span>Seoul</span><span>Istanbul</span><span>New York</span><span>Tokyo</span><span>Berlin</span>
+        </div>
+        <div class="flex gap-8">
+          <span>Paris</span><span>London</span><span>Seoul</span><span>Istanbul</span><span>New York</span><span>Tokyo</span><span>Berlin</span>
+        </div>
+      </div>
+
+      <div class="city-marquee flex w-max gap-8 text-6xl md:text-[5rem] leading-none font-black text-zinc-700 uppercase tracking-widest opacity-50">
+        <div class="flex gap-8">
+          <span>Frankfurt</span><span>Moscow</span><span>Milan</span><span>Paris</span><span>London</span><span>Seoul</span><span>Istanbul</span>
+        </div>
+        <div class="flex gap-8">
+          <span>Frankfurt</span><span>Moscow</span><span>Milan</span><span>Paris</span><span>London</span><span>Seoul</span><span>Istanbul</span>
+        </div>
+      </div>
+
+      <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[350px] md:w-[480px] bg-gradient-to-r from-[#176d49] via-[#0b3322] to-zinc-950 flex items-center justify-center z-10 shadow-2xl">
+        <span class="text-4xl md:text-[2.5rem] font-black tracking-widest whitespace-nowrap bg-gradient-to-r from-black via-zinc-900 to-emerald-400 bg-clip-text text-transparent">
+          Lovelace Travel
+        </span>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="horizontal-wrapper overflow-hidden bg-zinc-950 relative z-20 border-t border-zinc-900">
+    <div class="horizontal-container flex w-[300vw] h-screen">
+      <section class="panel w-screen h-full flex flex-col justify-center items-center px-10 relative">
+        <h2 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-emerald-300 to-emerald-700 mb-6">Seamless Planning</h2>
+        <div class="mt-12 w-[60vw] md:w-[800px] h-[400px] bg-zinc-900/50 border border-zinc-800 rounded-3xl shadow-2xl flex justify-center items-center overflow-hidden">
+          <img src="/calendar.png" alt="Calendar Interface" class="w-full h-full object-cover object-top">
+        </div>
+      </section>
+      <section class="panel w-screen h-full flex flex-col justify-center items-center px-10 relative">
+        <h2 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-blue-300 to-blue-700 mb-6">Track Everything</h2>
+        <div class="mt-12 w-[60vw] md:w-[800px] h-[400px] bg-[#0b3322]/30 border border-emerald-900/50 rounded-3xl shadow-2xl flex justify-center items-center overflow-hidden">
+          <img src="/budget.png" alt="Budget Interface" class="w-full h-full object-cover object-top">
+        </div>
+      </section>
+      <section class="panel w-screen h-full flex flex-col justify-center items-center px-10 relative">
+        <h2 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-purple-800 mb-6">Stay Up To Date</h2>
+        <div class="mt-12 w-[60vw] md:w-[800px] h-[400px] bg-blue-900/20 border border-blue-900/50 rounded-3xl shadow-2xl flex justify-center items-center overflow-hidden">
+          <img src="/dashboard.png" alt="Dashboard Interface" class="w-full h-full object-cover object-top">
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="bento-section min-h-screen bg-zinc-950 relative z-20 py-32 px-6 lg:px-20 border-t border-zinc-900 flex flex-col justify-center">
+    <h2 class="text-5xl md:text-7xl font-black text-center mb-20 text-zinc-200">Everything in one place.</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto w-full">
+      <div class="bento-item md:col-span-2 bg-zinc-900/50 border border-zinc-800/80 rounded-[2rem] p-10 min-h-[300px] flex flex-col justify-end relative overflow-hidden group backdrop-blur-sm transition-colors duration-500 hover:border-emerald-500/50">
+        <div class="absolute -top-20 -right-20 w-64 h-64 bg-emerald-500/20 blur-[60px] rounded-full group-hover:bg-emerald-500/40 group-hover:scale-150 transition-all duration-700 ease-out"></div>
+        <h3 class="text-3xl font-bold text-white z-10">AI PDF Scanner</h3>
+        <p class="text-zinc-400 mt-2 z-10">Upload tickets and let the AI extract all metadata automatically.</p>
+      </div>
+      <div class="bento-item bg-zinc-900/50 border border-zinc-800/80 rounded-[2rem] p-10 min-h-[300px] flex flex-col justify-end relative overflow-hidden group backdrop-blur-sm transition-colors duration-500 hover:border-pink-500/50">
+        <div class="absolute -top-10 -right-10 w-48 h-48 bg-pink-500/20 blur-[50px] rounded-full group-hover:bg-pink-500/40 group-hover:scale-150 transition-all duration-700 ease-out"></div>
+        <div class="absolute inset-0 bg-gradient-to-tr from-pink-500/5 to-transparent"></div>
+        <h3 class="text-3xl font-bold text-white z-10">Live Updates</h3>
+        <p class="text-zinc-400 mt-2 z-10">Flight delays pushed directly to your phone.</p>
+      </div>
+      <div class="bento-item bg-zinc-900/50 border border-zinc-800/80 rounded-[2rem] p-10 min-h-[300px] flex flex-col justify-end relative overflow-hidden group backdrop-blur-sm transition-colors duration-500 hover:border-blue-500/50">
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-blue-500/20 blur-[50px] rounded-full group-hover:bg-blue-500/40 group-hover:scale-150 transition-all duration-700 ease-out"></div>
+        <h3 class="text-3xl font-bold text-white z-10">Offline Mode</h3>
+        <p class="text-zinc-400 mt-2 z-10">Access your tickets even without an internet connection.</p>
+      </div>
+      <div class="bento-item md:col-span-2 bg-zinc-900/50 border border-zinc-800/80 rounded-[2rem] p-10 min-h-[300px] flex flex-col justify-end relative overflow-hidden group backdrop-blur-sm transition-colors duration-500 hover:border-purple-500/50">
+        <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-purple-500/20 blur-[60px] rounded-full group-hover:bg-purple-500/40 group-hover:scale-150 transition-all duration-700 ease-out"></div>
+        <h3 class="text-3xl font-bold text-white z-10">Interactive Maps</h3>
+        <p class="text-zinc-400 mt-2 z-10">Pin locations, restaurants, and sights on a shared group map.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section h-[80vh] bg-emerald-950 relative z-0 flex flex-col justify-center items-center text-center px-6">
+    <div class="cta-content scale-75 opacity-0">
+      <h2 class="text-6xl md:text-[6rem] font-black text-emerald-400 leading-none mb-8 drop-shadow-[0_0_30px_rgba(52,211,153,0.3)]">
+        Ready to take off?
+      </h2>
+      <a routerLink="/register" class="inline-block bg-white text-zinc-950 font-bold text-xl px-12 py-5 rounded-full hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all">
+        Start your Journey
+      </a>
+    </div>
+  </section>
+
+</div>

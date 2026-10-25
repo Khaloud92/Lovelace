@@ -1,0 +1,16 @@
+/* Styling is handled with Tailwind utility classes in the template. */
+
+/* Match the native date picker (and its calendar icon) to the active theme:
+   white icon on the dark default, black icon when body.light-mode is set. */
+input[type='date'] {
+  color-scheme: dark;
+}
+
+:host-context(body.light-mode) input[type='date'] {
+  color-scheme: light;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  cursor: pointer;
+}

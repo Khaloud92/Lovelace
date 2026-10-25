@@ -1,0 +1,17 @@
+<div style="display:flex; justify-content:center; align-items:center; height:100vh;">
+  <div style="text-align:center;">
+    @if (status === 'loading') {
+      <p>Verifying your email...</p>
+    }
+    @if (status === 'success') {
+      <h2>Email Verified</h2>
+      <p>{{ message }}</p>
+      <button (click)="goToLogin()">Go to Login</button>
+    }
+    @if (status === 'error') {
+      <h2>Verification Failed</h2>
+      <p>{{ message }}</p>
+      <button (click)="goToLogin()">Go to Login</button>
+    }
+  </div>
+</div>

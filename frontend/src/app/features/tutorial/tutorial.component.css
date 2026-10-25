@@ -1,0 +1,196 @@
+.tutorial-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.tutorial-dim {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 9, 11, 0.28);
+  backdrop-filter: blur(0.8px);
+}
+
+.tutorial-highlight {
+  position: fixed;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #34d399;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(52, 211, 153, 0.95));
+  box-shadow:
+    0 0 0 9999px rgba(9, 9, 11, 0.14),
+    0 0 18px rgba(52, 211, 153, 0.62);
+  pointer-events: none;
+  transition:
+    top 0.12s ease,
+    left 0.12s ease,
+    width 0.12s ease,
+    height 0.12s ease;
+  animation: tutorialPulse 1.3s ease-in-out infinite;
+}
+
+.tutorial-highlight-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.tutorial-card {
+  position: fixed;
+  z-index: 1002;
+  width: min(calc(100vw - 32px), 320px);
+  padding: 20px 18px 17px;
+  border: 1px solid #27272a;
+  border-radius: 18px;
+  background: rgba(24, 24, 27, 0.96);
+  color: #f4f4f5;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+  transition:
+    top 0.12s ease,
+    left 0.12s ease;
+}
+
+.tutorial-skip {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  color: #a1a1aa;
+  font-size: 13px;
+  font-weight: 700;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.tutorial-skip:hover {
+  color: #ffffff;
+}
+
+.tutorial-progress {
+  margin: 0 0 8px;
+  color: #34d399;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.tutorial-title {
+  margin: 0 52px 10px 0;
+  color: #f4f4f5;
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.tutorial-description {
+  margin: 0;
+  color: #d4d4d8;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.tutorial-dots {
+  display: flex;
+  gap: 7px;
+  margin: 18px 0;
+}
+
+.tutorial-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #52525b;
+  transition: 0.2s ease;
+}
+
+.tutorial-dot.active {
+  width: 24px;
+  background: #34d399;
+}
+
+.tutorial-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.tutorial-button {
+  flex: 1;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.tutorial-button.primary {
+  color: #ffffff;
+  background: #2563eb;
+  border: 1px solid #2563eb;
+}
+
+.tutorial-button.primary:hover {
+  background: #1d4ed8;
+}
+
+.tutorial-button.secondary {
+  color: #d4d4d8;
+  background: transparent;
+  border: 1px solid #3f3f46;
+}
+
+.tutorial-button.secondary:hover:not(:disabled) {
+  background: #27272a;
+}
+
+.tutorial-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@keyframes tutorialPulse {
+  0% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 9999px rgba(9, 9, 11, 0.14),
+      0 0 0 0 rgba(52, 211, 153, 0.42);
+  }
+
+  70% {
+    transform: scale(1.04);
+    box-shadow:
+      0 0 0 9999px rgba(9, 9, 11, 0.14),
+      0 0 0 8px rgba(52, 211, 153, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 9999px rgba(9, 9, 11, 0.14),
+      0 0 0 0 rgba(52, 211, 153, 0);
+  }
+}
+
+@media (max-width: 520px) {
+  .tutorial-card {
+    left: 16px !important;
+    right: 16px;
+    width: auto;
+
+    bottom: 14px;
+    max-height: calc(100vh - 28px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  .tutorial-actions {
+    flex-direction: column;
+  }
+}

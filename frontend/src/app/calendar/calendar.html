@@ -1,0 +1,188 @@
+<div class="min-h-screen relative text-slate-900 dark:text-white font-sans overflow-x-hidden pb-20">
+
+  <!-- Chromatic Background -->
+  <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-slate-50 dark:bg-[#09090b] transition-colors duration-500">
+    <div class="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-fuchsia-400 opacity-30 dark:opacity-60 dark:bg-fuchsia-600/30 blur-[120px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+    <div class="absolute top-[20%] -right-[10%] w-[45vw] h-[45vw] rounded-full bg-cyan-300 opacity-40 dark:opacity-60 dark:bg-cyan-500/20 blur-[120px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+    <div class="absolute -bottom-[20%] left-[20%] w-[60vw] h-[60vw] rounded-full bg-indigo-400 opacity-30 dark:opacity-50 dark:bg-indigo-600/30 blur-[140px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+  </div>
+
+  <div class="relative z-10 pt-32">
+    <section class="w-full mb-16 md:mb-20 relative px-4 md:px-0">
+      @if (hasTripsThisMonth) {
+        <div class="relative">
+          <div
+            #headerScrollContainer
+            (scroll)="onHeaderScroll(headerScrollContainer)"
+            class="flex h-auto md:h-96 md:-ml-10 md:-mr-10 gap-0 overflow-x-auto scrollbar-hide"
+            style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+
+            @for (img of headerImages; track img.destination; let i = $index) {
+              <div class="group relative flex-shrink-0 md:-skew-x-12 overflow-hidden transition-all duration-500 hover:z-10 cursor-pointer shadow-2xl h-48 md:h-auto border border-white/40 dark:border-white/10"
+                   [style.min-width]="headerImages.length <= 3 ? (100 / headerImages.length) + '%' : '33.333%'"
+                   [style.width]="headerImages.length <= 3 ? (100 / headerImages.length) + '%' : '33.333%'"
+                   style="scroll-snap-align: start;">
+                <div class="absolute inset-0 md:inset-[-50px] md:skew-x-12 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                     [style.background-image]="'url(' + img.imageUrl + ')'">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                </div>
+                <div class="absolute bottom-6 left-6 md:bottom-10 md:skew-x-12"
+                     [class.md:left-32]="i === 0"
+                     [class.md:left-16]="i !== 0">
+                  <h3 class="cal-header-destination font-extrabold text-2xl md:text-4xl tracking-wider text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                    {{ img.destination }}
+                  </h3>
+                  <p class="font-semibold mt-1 text-sm drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]"
+                     [style.color]="img.accentColor">
+                    {{ img.country }}
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+
+          @if (headerImages.length > 3 && showScrollHint) {
+            <div class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 items-center gap-1 text-white/80 text-xs font-medium pointer-events-none transition-opacity duration-300 drop-shadow-md">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+              <span>scroll</span>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="flex items-center justify-center h-48 md:h-64 md:-ml-10 md:-mr-10 bg-white/40 dark:bg-white/5 backdrop-blur-3xl border border-dashed border-slate-400 dark:border-white/20 rounded-2xl shadow-xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)]">
+          <div class="text-center">
+            <svg class="mx-auto mb-3 text-slate-500 dark:text-zinc-400" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/>
+              <path d="M12 8v4l3 3"/>
+              <path d="M3.05 11H2m20 0h-1.05M12 20.95V22"/>
+            </svg>
+            <p class="text-slate-700 dark:text-zinc-300 font-medium text-lg">No trips this month</p>
+            <p class="text-slate-500 dark:text-zinc-500 text-sm mt-1">Plan a trip and it will appear here</p>
+          </div>
+        </div>
+      }
+    </section>
+
+    <section class="max-w-[95%] mx-auto px-2 md:px-4">
+      <div class="mb-6 flex flex-col gap-4 lg:gap-5">
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div class="flex flex-wrap items-center gap-2 md:gap-3">
+            <button mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" [daysInWeek]="navigationDaysInWeek" (viewDateChange)="onViewDateChange()" class="cal-page-btn bg-white/60 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-zinc-300 font-semibold py-2 px-3 md:px-4 rounded-xl shadow-sm dark:shadow-inner transition-all backdrop-blur-md text-sm md:text-base">Back</button>
+            <button mwlCalendarToday [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()" class="cal-today-btn bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500/80 dark:hover:bg-emerald-400 border border-emerald-600/50 dark:border-emerald-400/50 text-white font-bold py-2 px-3 md:px-4 rounded-xl shadow-md dark:shadow-[0_0_15px_rgba(16,185,129,0.3),inset_0_1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl transition-all text-sm md:text-base">Today</button>
+            <button mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" [daysInWeek]="navigationDaysInWeek" (viewDateChange)="onViewDateChange()" class="cal-page-btn bg-white/60 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-zinc-300 font-semibold py-2 px-3 md:px-4 rounded-xl shadow-sm dark:shadow-inner transition-all backdrop-blur-md text-sm md:text-base">Ahead</button>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 md:gap-3">
+            <button (click)="openModal()" class="cal-action-btn bg-white/60 dark:bg-black/20 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 border border-slate-300 dark:border-white/10 hover:border-emerald-400 dark:hover:border-emerald-500 text-slate-700 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-semibold py-2 px-3 md:px-4 rounded-xl shadow-sm dark:shadow-inner transition-all backdrop-blur-md text-sm md:text-base">+ New Event</button>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="application/pdf" class="hidden">
+            <button (click)="fileInput.click()" [disabled]="isUploading" class="cal-ticket-btn bg-white/60 dark:bg-black/20 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-slate-300 dark:border-white/10 hover:border-indigo-400 dark:hover:border-indigo-500 text-slate-700 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium py-2 px-3 md:px-4 rounded-xl shadow-sm dark:shadow-inner transition-all backdrop-blur-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm md:text-base">
+              @if (isUploading) { <span>Scanning...</span> } @else { <span>Scan Ticket</span> }
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center gap-3 md:gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-wide text-center drop-shadow-sm">My Calendar</h2>
+          <div class="flex items-center gap-2">
+            <button (click)="setView('month')" class="cal-view-btn bg-white/60 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-zinc-300 font-semibold py-2 px-4 rounded-xl shadow-sm dark:shadow-inner transition-all backdrop-blur-md text-sm md:text-base" [class.bg-slate-200]="view === 'month'" [class.dark:bg-white/10]="view === 'month'">Month</button>
+            <button (click)="setView('week')" class="cal-view-btn bg-white/60 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-zinc-300 font-semibold py-2 px-4 rounded-xl shadow-sm dark:shadow-inner transition-all backdrop-blur-md text-sm md:text-base" [class.bg-slate-200]="view === 'week'" [class.dark:bg-white/10]="view === 'week'">Week</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Glass Calendar Main Wrapper -->
+      <div class="bg-white/40 dark:bg-white/5 backdrop-blur-3xl rounded-3xl border border-white/60 dark:border-white/20 shadow-xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden overflow-x-auto p-2 md:p-4">
+        <div class="min-w-[300px]">
+          @switch (view) {
+            @case ('month') { <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" (eventClicked)="openEditModal($event.event.id)"></mwl-calendar-month-view> }
+            @case ('week') { <mwl-calendar-week-view [viewDate]="viewDate" [events]="events" [daysInWeek]="daysInWeekView" [eventTemplate]="weekEventTemplate" [hourSegmentTemplate]="hourSegmentTemplate" (eventClicked)="openEditModal($event.event.id)"></mwl-calendar-week-view> }
+            @case ('day') { <mwl-calendar-day-view [viewDate]="viewDate" [events]="events" (eventClicked)="openEditModal($event.event.id)"></mwl-calendar-day-view> }
+          }
+        </div>
+      </div>
+
+      <!-- Edit Modal -->
+      @if (isModalOpen) {
+        <div class="fixed inset-0 bg-slate-900/20 dark:bg-black/40 flex justify-center items-center z-50 backdrop-blur-md px-4 transition-all">
+          <div class="bg-white/90 dark:bg-white/5 backdrop-blur-3xl rounded-3xl border border-white dark:border-white/20 shadow-2xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.5)] p-5 md:p-8 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-teal-500 dark:from-cyan-400 dark:to-teal-400 mb-6 drop-shadow-sm">
+              {{ isEditMode ? 'Edit Event' : 'New Event' }}
+            </h2>
+
+            <div class="space-y-4">
+              <div>
+                <label for="event-title" class="block text-slate-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-wider mb-1.5">Title *</label>
+                <input id="event-title" type="text" [(ngModel)]="newAppointment.title" placeholder="e.g. Tokyo Trip" class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm outline-none transition-all shadow-sm dark:shadow-inner">
+              </div>
+              <div>
+                <label for="event-start" class="block text-slate-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-wider mb-1.5">Start Date *</label>
+                <input id="event-start" type="datetime-local" [(ngModel)]="newAppointment.startDate" class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm outline-none transition-all shadow-sm dark:shadow-inner dark:[&::-webkit-calendar-picker-indicator]:invert">
+              </div>
+              <div>
+                <label for="event-end" class="block text-slate-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-wider mb-1.5">End Date (Optional)</label>
+                <input id="event-end" type="datetime-local" [(ngModel)]="newAppointment.endDate" class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm outline-none transition-all shadow-sm dark:shadow-inner dark:[&::-webkit-calendar-picker-indicator]:invert">
+              </div>
+              <div>
+                <label for="event-location" class="block text-slate-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-wider mb-1.5">Location</label>
+                <input id="event-location" type="text" [(ngModel)]="newAppointment.location" placeholder="e.g. Haneda Airport" class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm outline-none transition-all shadow-sm dark:shadow-inner">
+              </div>
+              <div>
+                <label for="event-description" class="block text-slate-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-wider mb-1.5">Description</label>
+                <textarea id="event-description" [(ngModel)]="newAppointment.description" rows="3" placeholder="Flight number, Check-in times..." class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm outline-none transition-all shadow-sm dark:shadow-inner"></textarea>
+              </div>
+              <div>
+                <label for="event-color" class="block text-slate-500 dark:text-zinc-400 text-xs font-bold uppercase tracking-wider mb-1.5">Event Color</label>
+                <div class="flex items-center gap-3">
+                  <input id="event-color" type="color" [(ngModel)]="selectedColor" class="w-14 h-14 p-1 bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 rounded-xl cursor-pointer focus:outline-none focus:border-emerald-500 transition-colors shadow-sm dark:shadow-inner">
+                  <span class="text-slate-500 dark:text-zinc-400 text-sm font-mono uppercase">{{ selectedColor }}</span>
+                </div>
+              </div>
+
+              @if (!isEditMode) {
+                <div class="flex items-center gap-3 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 mt-2">
+                  <input type="checkbox" id="isTripToggle" [(ngModel)]="isFullTrip" class="w-5 h-5 accent-emerald-500 cursor-pointer">
+                  <label for="isTripToggle" class="text-sm font-bold text-emerald-700 dark:text-emerald-400 cursor-pointer select-none">
+                    Create as Full Trip <br>
+                    <span class="text-xs font-medium text-emerald-600/70 dark:text-emerald-400/70">Generates Cover Image & Budget</span>
+                  </label>
+                </div>
+              }
+            </div>
+
+            <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div class="w-full sm:w-auto flex justify-center">
+                @if (isEditMode) {
+                  <button (click)="deleteSelectedEntry()" [disabled]="isSaving" type="button" class="text-red-500 hover:text-red-600 dark:hover:text-red-400 font-semibold text-sm transition-colors flex items-center gap-2 disabled:opacity-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                    Delete
+                  </button>
+                }
+              </div>
+              <div class="flex gap-4 items-center w-full sm:w-auto justify-between sm:justify-end">
+                <button (click)="closeModal()" type="button" class="text-sm text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white font-semibold transition-colors">Cancel</button>
+                <button (click)="saveEntry()" [disabled]="isSaving" type="button" class="bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500/80 dark:hover:bg-emerald-400 border border-emerald-600/50 dark:border-emerald-400/50 shadow-md dark:shadow-[0_0_15px_rgba(16,185,129,0.3),inset_0_1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto">
+                  {{ isSaving ? 'Saving...' : (isEditMode ? 'Update' : 'Save') }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- Templates -->
+    <ng-template #weekEventTemplate let-weekEvent="weekEvent">
+      <div class="w-full h-full px-2 py-1 rounded-md overflow-hidden flex items-center border shadow-sm" [style.backgroundColor]="weekEvent.event.color?.primary || '#22d3ee'" [style.borderColor]="weekEvent.event.color?.primary || '#22d3ee'" [style.color]="'rgba(15, 23, 42, 0.92)'" [style.boxShadow]="'inset 0 0 0 9999px rgba(255,255,255,0.3)'">
+        <div class="min-w-0 flex-1"><div class="text-sm font-medium truncate">{{ weekEvent.event.title }}</div></div>
+      </div>
+    </ng-template>
+
+    <ng-template #hourSegmentTemplate let-segment="segment" let-locale="locale" let-isTimeLabel="isTimeLabel">
+      <div class="cal-hour-segment" [class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart">
+        @if (isTimeLabel) { <span class="mobile-time-label text-slate-500 dark:text-zinc-400">{{ segment.date | calendarDate:'weekViewHour':locale }}</span> }
+      </div>
+    </ng-template>
+  </div>
+</div>

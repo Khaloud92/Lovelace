@@ -1,0 +1,10 @@
+:host {
+  display: inline-flex;
+  line-height: 0;
+}
+
+/* Keep the initial white on the gradient in both dark and light mode — the
+   global light-mode stylesheet would otherwise darken `.text-white`. */
+.avatar-initial {
+  color: #ffffff !important;
+}

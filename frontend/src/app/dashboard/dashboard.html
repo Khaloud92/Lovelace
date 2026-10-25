@@ -1,0 +1,230 @@
+<!-- Chromatic Background (Basis = Light, dark: = Dark Mode) -->
+<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-slate-50 dark:bg-[#09090b] transition-colors duration-500">
+  <div class="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-fuchsia-400 opacity-30 dark:opacity-60 dark:bg-fuchsia-600/30 blur-[120px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+  <div class="absolute top-[20%] -right-[10%] w-[45vw] h-[45vw] rounded-full bg-cyan-300 opacity-40 dark:opacity-60 dark:bg-cyan-500/20 blur-[120px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+  <div class="absolute -bottom-[20%] left-[20%] w-[60vw] h-[60vw] rounded-full bg-indigo-400 opacity-30 dark:opacity-50 dark:bg-indigo-600/30 blur-[140px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+</div>
+
+<!-- Dashboard Content -->
+<div class="dashboard-wrapper relative z-10 p-6 max-w-7xl mx-auto pt-28">
+
+  <div class="dashboard-header mb-8">
+    <div class="flex items-center gap-4 mb-2">
+      <div data-tour="dashboard-overview" class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-emerald-400 flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/20 shrink-0">
+        📊
+      </div>
+      <h1 class="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-emerald-500 dark:from-blue-400 dark:to-emerald-400 bg-clip-text text-transparent drop-shadow-sm transition-colors">
+        Interactive Dashboard
+      </h1>
+    </div>
+    <p class="text-slate-500 dark:text-zinc-400 transition-colors">Welcome back! Here is an overview of your upcoming adventures.</p>
+  </div>
+
+  <div class="trips-section mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold text-slate-800 dark:text-zinc-200 transition-colors">Your next Trips</h2>
+      <button data-tour="new-trip" class="add-trip-btn flex items-center gap-2 bg-gradient-to-br from-white/70 to-white/40 hover:from-white/90 hover:to-white/60 dark:from-white/20 dark:to-white/5 dark:hover:from-white/30 dark:hover:to-white/10 backdrop-blur-2xl border border-white/80 dark:border-white/30 shadow-sm dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),0_8px_32px_rgba(0,0,0,0.3)] text-slate-800 dark:text-white px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300" (click)="openAddTripModal()">
+        <span class="plus-icon text-lg font-bold leading-none text-emerald-600 dark:text-emerald-400">+</span>
+        New Trip
+      </button>
+    </div>
+
+    <!-- Glass Panel: Trips -->
+    <div class="relative bg-white/50 dark:bg-white/5 backdrop-blur-3xl border border-white/80 dark:border-white/20 shadow-lg dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl p-6 transition-all duration-300">
+      <div class="trips-track flex gap-4 overflow-x-auto scroll-smooth" style="scrollbar-width: none; -ms-overflow-style: none;">
+
+        @if (trips.length === 0) {
+          <div class="empty-trips flex flex-col items-center justify-center min-w-[280px] h-[220px] border border-dashed border-slate-300 dark:border-white/30 rounded-2xl text-slate-500 dark:text-zinc-400 bg-white/40 dark:bg-black/20 transition-colors">
+            <span class="text-3xl mb-2">🗺️</span>
+            <p class="text-sm">No trips yet — add your first!</p>
+          </div>
+        }
+
+        @for (trip of trips; track trip.id) {
+          <div [id]="'trip-card-' + trip.id"
+               class="trip-card flex-shrink-0 w-[280px] rounded-2xl overflow-hidden relative cursor-pointer border border-white/80 dark:border-white/20 bg-white/60 dark:bg-black/40 backdrop-blur-md shadow-sm dark:shadow-lg transition-all"
+               [class.border-emerald-500]="isTripCurrent(trip)"
+               role="button" tabindex="0"
+               (click)="navigateToTrip(trip)" (keydown.enter)="navigateToTrip(trip)" (keydown.space)="navigateToTrip(trip)">
+
+            <div class="relative h-[160px] w-full overflow-hidden">
+              <img [src]="getDestinationImageUrl(trip.destination)" class="w-full h-full object-cover opacity-100 dark:opacity-90" [alt]="trip.destination" width="280" height="160" loading="lazy" />
+              <span class="absolute top-3 right-3 text-xs px-2.5 py-1 rounded-full z-10 shadow-md" [class]="getTripStatusClass(trip)">
+                {{ getTripStatus(trip) }}
+              </span>
+              <div class="trip-card-glow absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500/0 via-emerald-500/80 to-emerald-500/0 opacity-0"></div>
+            </div>
+
+            <div class="p-3 flex flex-col gap-1">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 min-w-0">
+                  @if (trip.color) {
+                    <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-sm" [style.background-color]="trip.color"></span>
+                  }
+                  <h3 class="trip-title text-slate-900 dark:text-white font-bold text-sm truncate max-w-[180px] transition-colors">{{ trip.destination }}</h3>
+                </div>
+                <button class="w-6 h-6 rounded-lg bg-red-500/10 dark:bg-red-500/20 hover:bg-red-500/20 dark:hover:bg-red-500/40 text-red-600 dark:text-red-300 text-xs transition-colors flex items-center justify-center flex-shrink-0 backdrop-blur-sm" (click)="deleteTrip(trip, $event)" title="Delete trip">✕</button>
+              </div>
+              <p class="trip-subtitle text-slate-500 dark:text-zinc-300 text-xs truncate transition-colors">{{ trip.title }}</p>
+              <div class="flex items-center justify-between mt-1">
+                <span class="trip-date text-slate-500 dark:text-zinc-400 text-xs transition-colors">{{ trip.startDate | date:'dd.MM.yy' }} – {{ trip.endDate | date:'dd.MM.yy' }}</span>
+                @if (trip.budget) {
+                  <span class="trip-budget text-emerald-600 dark:text-emerald-400 text-xs font-bold transition-colors">{{ trip.budget.amount | currency:'EUR' }}</span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 items-start">
+    <!-- Glass Panel: Budget -->
+    <a routerLink="/budget" class="overview-card block bg-white/50 dark:bg-white/5 backdrop-blur-3xl border border-white/80 dark:border-white/20 shadow-lg dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl p-6 hover:bg-white/70 hover:border-blue-500/50 dark:hover:bg-white/10 transition-all duration-300 cursor-pointer group">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold text-slate-800 dark:text-zinc-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Budget</h2>
+        <span class="text-2xl drop-shadow-sm">💰</span>
+      </div>
+      <div class="flex justify-between items-baseline mb-4">
+        <div>
+          <p class="text-slate-500 dark:text-zinc-400 text-xs uppercase tracking-wider mb-1 transition-colors">Total Budget</p>
+          <p class="text-2xl font-extrabold text-slate-900 dark:text-white transition-colors">{{ totalBudget | currency:'EUR':'symbol':'1.0-0' }}</p>
+        </div>
+        <div class="text-right">
+          <p class="text-slate-500 dark:text-zinc-400 text-xs uppercase tracking-wider mb-1 transition-colors">Spent</p>
+          <p class="text-lg font-bold text-slate-700 dark:text-zinc-200 transition-colors">{{ totalSpent | currency:'EUR':'symbol':'1.0-0' }}</p>
+        </div>
+      </div>
+      @if (upcomingBudgets.length > 0) {
+        <div class="space-y-3">
+          @for (b of upcomingBudgets; track b.id) {
+            <div class="bg-white/60 dark:bg-black/40 rounded-xl p-3 border border-white/80 dark:border-white/10 transition-colors">
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-slate-800 dark:text-white text-xs font-semibold truncate max-w-[140px] transition-colors">{{ b.name }}</span>
+                <span class="text-xs font-bold px-2 py-0.5 rounded-full" [class]="b.remaining < 0 ? 'bg-red-500/10 text-red-600 dark:bg-red-500/20 dark:text-red-400' : 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400'">
+                  {{ b.remaining < 0 ? '-' : '' }}€{{ Math.abs(b.remaining) }} left
+                </span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-200 dark:bg-zinc-800 rounded-full overflow-hidden transition-colors">
+                <div class="h-full rounded-full transition-all duration-500 shadow-none dark:shadow-[0_0_10px_rgba(0,0,0,0.5)]" [style.width.%]="b.percent" [class]="getProgressClass(b.percent)"></div>
+              </div>
+              <div class="flex justify-between mt-1">
+                <span class="text-slate-500 dark:text-zinc-400 text-xs transition-colors">€{{ b.spent }} spent</span>
+                <span class="text-slate-500 dark:text-zinc-400 text-xs transition-colors">€{{ b.amount }} total</span>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="text-slate-500 dark:text-zinc-400 text-sm text-center py-4 transition-colors">Loading budgets...</p>
+      }
+      <p class="text-blue-600 dark:text-blue-400 mt-4 font-medium text-sm transition-colors">Manage Budget →</p>
+    </a>
+
+    <!-- Glass Panel: Calendar -->
+    <div class="overview-card lg:col-span-2 self-start bg-white/50 dark:bg-white/5 backdrop-blur-3xl border border-white/80 dark:border-white/20 shadow-lg dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl p-6 hover:bg-white/70 hover:border-emerald-400/50 dark:hover:bg-white/10 transition-all duration-300 group">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-xl font-bold text-slate-800 dark:text-zinc-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Calendar</h2>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 dark:text-zinc-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </div>
+
+      <div class="calendar-months-scroll">
+        @for (month of calendarMonths; track month.name) {
+          <div class="mini-cal bg-white/60 dark:bg-black/40 border border-white/80 dark:border-white/10 rounded-xl p-3 hover:bg-white/90 hover:border-emerald-400/50 dark:hover:bg-white/5 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 shadow-sm dark:shadow-lg" role="button" tabindex="0" (click)="navigateToMonth(month)" (keydown.enter)="navigateToMonth(month)" (keydown.space)="navigateToMonth(month)">
+            <p class="text-emerald-600 dark:text-emerald-400 font-bold mb-2 uppercase tracking-wide transition-colors" style="font-size:0.65rem;">{{ month.name }} {{ month.year }}</p>
+            <div class="grid grid-cols-7 mb-0.5">
+              @for (wd of weekdays; track wd) {
+                <span class="text-center text-slate-500 dark:text-zinc-400 font-semibold uppercase transition-colors" style="font-size:0.55rem; line-height:1.4;">{{ wd }}</span>
+              }
+            </div>
+            <div class="grid grid-cols-7" style="gap:1px;">
+              @for (cell of month.days; track $index) {
+                @if (cell.day === 0) {
+                  <span style="aspect-ratio:1;"></span>
+                } @else {
+                  <span class="relative flex items-center justify-center rounded-full leading-none transition-all"
+                        style="font-size:0.6rem; aspect-ratio:1;"
+                        [ngClass]="cell.isToday ? 'bg-emerald-500 text-white font-bold shadow-sm dark:shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'text-slate-700 dark:text-zinc-300 font-medium'">
+                    {{ cell.day }}
+                    @if (cell.hasEvent) {
+                      <span class="absolute rounded-full" [style.background-color]="cell.isToday ? '#ffffff' : cell.eventColor" style="width:3px;height:3px;bottom:1px;left:50%;transform:translateX(-50%);"></span>
+                    }
+                  </span>
+                }
+              }
+            </div>
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-200 dark:border-white/10 transition-colors">
+              <span style="font-size:0.65rem;" class="text-slate-500 dark:text-zinc-400">
+                <span class="text-slate-900 dark:text-white font-semibold transition-colors">{{ month.eventCount }}</span> {{ month.eventCount === 1 ? 'Event' : 'Events' }}
+              </span>
+              <span class="mini-cal-hint text-emerald-600 dark:text-emerald-400 opacity-0 transition-opacity duration-200" style="font-size:0.6rem;">Open →</span>
+            </div>
+          </div>
+        }
+      </div>
+      <div class="calendar-scroll-dots mt-3">
+        @for (month of calendarMonths; track month.name; let i = $index) {
+          <span class="scroll-dot bg-slate-300 dark:bg-white/20 transition-colors" [attr.data-index]="i"></span>
+        }
+      </div>
+      <button class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 mt-5 font-bold text-sm flex items-center gap-1 transition-colors bg-transparent border-none p-0 cursor-pointer drop-shadow-sm" (click)="navigateToMonth(calendarMonths[0])">
+        Open Calendar →
+      </button>
+    </div>
+  </div>
+</div>
+
+@if (showModal) {
+  <div class="modal-backdrop fixed inset-0 bg-slate-900/20 dark:bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all" role="presentation" (click)="closeModal($event)" (keydown.escape)="closeModal($event)">
+    <div class="modal-box bg-white/90 dark:bg-white/5 backdrop-blur-3xl border border-white dark:border-white/20 shadow-2xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.5)] rounded-3xl p-8 w-full max-w-md transition-all" role="dialog" aria-modal="true" aria-label="New Trip" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white transition-colors">New Trip</h3>
+        <button class="text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white text-2xl leading-none transition-colors" (click)="closeModalBtn()">×</button>
+      </div>
+
+      <form (ngSubmit)="saveTrip()" #tripForm="ngForm" class="flex flex-col gap-4">
+        <div>
+          <label for="title" class="block text-xs text-slate-600 dark:text-zinc-300 mb-1 uppercase tracking-wider transition-colors">Title</label>
+          <input type="text" id="title" name="title" [(ngModel)]="newTrip.title" required placeholder="e.g. Summer Vacation" class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 text-sm outline-none transition-all duration-300 shadow-sm dark:shadow-inner" />
+        </div>
+        <div>
+          <label for="destination" class="block text-xs text-slate-600 dark:text-zinc-300 mb-1 uppercase tracking-wider transition-colors">Destination</label>
+          <input type="text" id="destination" name="destination" [(ngModel)]="newTrip.destination" required placeholder="e.g. Tokyo, Japan" class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 text-sm outline-none transition-all duration-300 shadow-sm dark:shadow-inner" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="startDate" class="block text-xs text-slate-600 dark:text-zinc-300 mb-1 uppercase tracking-wider transition-colors">Start</label>
+            <input type="date" id="startDate" name="startDate" [(ngModel)]="newTrip.startDate" required class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm outline-none transition-all duration-300 shadow-sm dark:shadow-inner dark:[&::-webkit-calendar-picker-indicator]:invert" />
+          </div>
+          <div>
+            <label for="endDate" class="block text-xs text-slate-600 dark:text-zinc-300 mb-1 uppercase tracking-wider transition-colors">End</label>
+            <input type="date" id="endDate" name="endDate" [(ngModel)]="newTrip.endDate" required class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm outline-none transition-all duration-300 shadow-sm dark:shadow-inner dark:[&::-webkit-calendar-picker-indicator]:invert" />
+          </div>
+        </div>
+        <div>
+          <label for="description" class="block text-xs text-slate-600 dark:text-zinc-300 mb-1 uppercase tracking-wider transition-colors">Description</label>
+          <input type="text" id="description" name="description" [(ngModel)]="newTrip.description" placeholder="Optional" class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 text-sm outline-none transition-all duration-300 shadow-sm dark:shadow-inner" />
+        </div>
+        <div>
+          <label for="tripColor" class="block text-xs text-slate-600 dark:text-zinc-300 mb-1 uppercase tracking-wider transition-colors">Trip Color</label>
+          <input type="color" id="tripColor" name="tripColor" [(ngModel)]="newTrip.color" class="w-10 h-10 rounded-lg border border-slate-300 dark:border-white/10 bg-white/60 dark:bg-black/20 backdrop-blur-md cursor-pointer p-0.5 transition-colors" />
+        </div>
+        <div>
+          <label for="budgetAmount" class="block text-xs text-slate-600 dark:text-zinc-300 mb-1 uppercase tracking-wider transition-colors">Budget (€)</label>
+          <input type="number" id="budgetAmount" name="budgetAmount" [(ngModel)]="newTrip.budgetAmount" required placeholder="e.g. 1500" class="w-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white/90 dark:focus:bg-black/40 backdrop-blur-md rounded-xl px-4 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 text-sm outline-none transition-all duration-300 shadow-sm dark:shadow-inner" />
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button type="button" (click)="closeModalBtn()" class="flex-1 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 backdrop-blur-md text-slate-700 dark:text-zinc-300 rounded-xl py-2.5 text-sm font-medium transition-all duration-300 shadow-sm dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+            Cancel
+          </button>
+          <button type="submit" [disabled]="tripForm.invalid" class="flex-1 bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500/80 dark:hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed border border-emerald-600/50 dark:border-emerald-400/50 text-white font-bold rounded-xl py-2.5 text-sm transition-all duration-300 shadow-md dark:shadow-[0_0_15px_rgba(16,185,129,0.3),inset_0_1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl">
+            Save Trip
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

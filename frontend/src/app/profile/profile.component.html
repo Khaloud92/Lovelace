@@ -1,0 +1,79 @@
+<div class="min-h-screen relative text-slate-900 dark:text-white font-sans overflow-x-hidden">
+
+  <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-slate-50 dark:bg-[#09090b] transition-colors duration-500">
+    <div class="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-fuchsia-400 opacity-30 dark:opacity-60 dark:bg-fuchsia-600/30 blur-[120px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+    <div class="absolute top-[20%] -right-[10%] w-[45vw] h-[45vw] rounded-full bg-cyan-300 opacity-40 dark:opacity-60 dark:bg-cyan-500/20 blur-[120px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+    <div class="absolute -bottom-[20%] left-[20%] w-[60vw] h-[60vw] rounded-full bg-indigo-400 opacity-30 dark:opacity-50 dark:bg-indigo-600/30 blur-[140px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+  </div>
+
+  <div class="relative z-10 max-w-2xl mx-auto px-6 pb-12 pt-32">
+    <h1 class="text-3xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500 dark:from-blue-400 dark:to-emerald-400 drop-shadow-sm">My Profile</h1>
+
+    <div class="bg-white/40 dark:bg-white/5 backdrop-blur-3xl border border-white/60 dark:border-white/20 rounded-3xl p-10 shadow-xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)]">
+
+      <!-- Identity -->
+      <div class="flex flex-col items-center text-center">
+        <button type="button" (click)="pickPhoto()" [attr.aria-label]="avatar() ? 'Change profile picture' : 'Add profile picture'" class="group relative w-32 h-32 rounded-full overflow-hidden shadow-xl border-2 border-white dark:border-white/20 focus:outline-none focus:ring-4 focus:ring-emerald-500/40 transition-transform hover:scale-105">
+          @if (avatar()) {
+            <img [src]="avatar()" alt="Profile picture" class="w-full h-full object-cover" />
+          } @else {
+            <span class="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-emerald-500 text-6xl font-extrabold text-white select-none shadow-inner">
+              {{ initial() }}
+            </span>
+          }
+          <span class="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100 backdrop-blur-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-8 w-8 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z" /></svg>
+            <span class="text-white text-xs font-bold uppercase tracking-wider">Change</span>
+          </span>
+        </button>
+
+        <h2 class="mt-6 text-2xl font-extrabold text-slate-900 dark:text-white drop-shadow-sm">{{ profile?.name || 'Traveler' }}</h2>
+
+        <div class="mt-6 flex items-center gap-3">
+          <button type="button" (click)="pickPhoto()" class="bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500/80 dark:hover:bg-emerald-400 border border-emerald-600/50 dark:border-emerald-400/50 shadow-md dark:shadow-[0_0_15px_rgba(16,185,129,0.3),inset_0_1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all">Change photo</button>
+          @if (avatar()) {
+            <button type="button" (click)="removePhoto()" class="bg-white/60 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all shadow-sm dark:shadow-inner">Remove</button>
+          }
+        </div>
+        @if (errorMessage) { <p class="mt-4 text-xs font-bold text-red-600 dark:text-red-400 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20">{{ errorMessage }}</p> }
+      </div>
+
+      <div class="my-10 border-t border-white/40 dark:border-white/10"></div>
+
+      <!-- Account details -->
+      <dl class="space-y-6 bg-white/40 dark:bg-black/20 p-6 rounded-2xl border border-white/60 dark:border-white/5 shadow-inner backdrop-blur-md">
+        <div class="flex items-center justify-between gap-4">
+          <dt class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-400">Name</dt>
+          <dd class="text-right text-base font-extrabold text-slate-900 dark:text-white break-words drop-shadow-sm">{{ profile?.name || '—' }}</dd>
+        </div>
+        <div class="border-t border-white/40 dark:border-white/5"></div>
+        <div class="flex items-center justify-between gap-4">
+          <dt class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-400">Email</dt>
+          <dd class="text-right text-base font-bold text-slate-700 dark:text-zinc-300 break-all">{{ profile?.email || '—' }}</dd>
+        </div>
+      </dl>
+
+      <div class="my-10 border-t border-white/40 dark:border-white/10"></div>
+
+      <!-- Location sharing -->
+      <div class="flex items-center justify-between gap-6 bg-white/40 dark:bg-black/20 p-6 rounded-2xl border border-white/60 dark:border-white/5 shadow-inner backdrop-blur-md">
+        <div>
+          <p class="text-base font-extrabold text-slate-900 dark:text-white drop-shadow-sm">Share location with friends</p>
+          <p class="mt-1 text-sm font-medium text-slate-500 dark:text-zinc-400">Your friends can see your live position on the trip map.</p>
+        </div>
+        <button type="button" role="switch" [attr.aria-checked]="locationSharingEnabled()" [disabled]="locationToggleBusy" (click)="toggleLocationSharing()" class="relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-4 focus:ring-emerald-500/40 disabled:opacity-50 border border-black/10 dark:border-white/10 shadow-inner" [class.bg-emerald-500]="locationSharingEnabled()" [class.bg-slate-300]="!locationSharingEnabled()" [class.dark:bg-zinc-700]="!locationSharingEnabled()">
+          <span class="inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform" [class.translate-x-7]="locationSharingEnabled()" [class.translate-x-1]="!locationSharingEnabled()"></span>
+        </button>
+      </div>
+      @if (locationSharingError()) { <p class="mt-4 text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-3 py-1.5 rounded-lg border border-amber-500/20">{{ locationSharingError() }}</p> }
+
+      <div class="my-10 border-t border-white/40 dark:border-white/10"></div>
+
+      <button type="button" (click)="logout()" class="w-full rounded-2xl bg-red-500/90 hover:bg-red-600 dark:bg-red-500/20 dark:hover:bg-red-500/40 border border-red-600/50 dark:border-red-500/30 shadow-md dark:shadow-inner px-4 py-4 text-base font-extrabold text-white dark:text-red-400 transition-all backdrop-blur-xl">
+        Sign Out
+      </button>
+    </div>
+
+    <input #fileInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+  </div>
+</div>

@@ -1,0 +1,132 @@
+<!-- Floating Apple Style Navbar -->
+<nav data-tour="taskbar" class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 bg-white/60 dark:bg-white/5 backdrop-blur-2xl border border-white/80 dark:border-white/20 shadow-sm dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)] rounded-full transition-all duration-300">
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-14 gap-3">
+
+      <!-- Logo -->
+      <div class="shrink-0 pl-2">
+<span class="inline-block text-lg sm:text-xl font-extrabold bg-gradient-to-r from-blue-600 to-emerald-500 dark:from-blue-400 dark:to-emerald-400 bg-clip-text text-transparent whitespace-nowrap transition-colors">
+Lovelace Travel
+</span>
+      </div>
+
+      <div class="hidden xl:block flex-1 min-w-0 overflow-x-auto [scrollbar-width:none]">
+        <div class="relative w-max mx-auto flex items-center gap-1 p-1 rounded-full bg-white/50 dark:bg-black/20 border border-white/80 dark:border-white/5 transition-colors" #navLinksContainer>
+
+          <div class="absolute left-0 top-[4px] h-8 bg-white/95 dark:bg-white/20 backdrop-blur-md border border-white dark:border-white/30 rounded-full z-0 pointer-events-none shadow-sm dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)]" #activeSlider></div>
+
+          <a data-tour="nav-dashboard" routerLink="/dashboard" routerLinkActive="active-link" class="nav-item relative z-10 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap">Dashboard</a>
+          <a data-tour="nav-calendar" routerLink="/calendar" routerLinkActive="active-link" class="nav-item relative z-10 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap">Calendar</a>
+          <a data-tour="nav-budget" routerLink="/budget" routerLinkActive="active-link" class="nav-item relative z-10 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap">Budget Planer</a>
+          <a data-tour="nav-chats" routerLink="/chats" routerLinkActive="active-link" class="nav-item relative z-10 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap">
+            Chats
+            @if (hasUnreadChats()) {
+              <span class="absolute top-1 right-0.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-zinc-950"></span>
+            }
+          </a>
+          <a data-tour="nav-filemanager" routerLink="/filemanager" routerLinkActive="active-link" class="nav-item relative z-10 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap">Filemanager</a>
+          <a data-tour="nav-trip-map" routerLink="/trip-map" routerLinkActive="active-link" class="nav-item relative z-10 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap">Trip Map</a>
+        </div>
+      </div>
+
+      <div data-tour="search-bar" class="hidden md:block w-64 2xl:w-80 min-w-44">
+        <app-search-bar></app-search-bar>
+      </div>
+
+      <!-- User Menu -->
+      <div class="flex items-center gap-2 shrink-0">
+        <div #profileDropdown data-testid="profile-dropdown-container" class="relative hidden sm:block">
+          <button
+            type="button"
+            data-tour="profile-menu"
+            (click)="toggleDropdown($event)"
+            [attr.aria-expanded]="isDropdownOpen"
+            aria-haspopup="menu"
+            aria-controls="profile-dropdown-menu"
+            class="flex items-center gap-2 px-2 sm:px-3 py-2 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/10 rounded-full text-sm font-medium transition-colors focus:outline-none whitespace-nowrap">
+<span class="relative inline-flex">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5" aria-hidden="true">
+<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+</svg>
+  @if (friendRequestCount() > 0) {
+    <span class="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white/80 dark:ring-zinc-950"></span>
+  }
+</span>
+            <span class="hidden md:inline">Profile</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 hidden md:block" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+
+          <!-- Dropdown Profile Menu -->
+          @if (isDropdownOpen) {
+            <div id="profile-dropdown-menu" data-testid="profile-dropdown-menu" role="menu" class="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-black/80 backdrop-blur-xl border border-slate-200 dark:border-zinc-800 rounded-xl shadow-lg py-2 z-50 transition-colors">
+              <a routerLink="/profile" (click)="closeDropdown()" role="menuitem" class="block px-4 py-2 text-sm text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Profile</a>
+              <a routerLink="/email-costs" (click)="closeDropdown()" role="menuitem" class="block px-4 py-2 text-sm text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Email Cost</a>
+              <a data-tour="nav-friends" routerLink="/friends" (click)="closeDropdown()" role="menuitem" class="block px-4 py-2 text-sm text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Friends</a>
+
+              <div class="border-t border-slate-200 dark:border-zinc-800 my-1 transition-colors"></div>
+
+              <button type="button" (click)="toggleTheme(); closeDropdown()" role="menuitem" class="w-full text-left block px-4 py-2 text-sm text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors">
+                {{ isLightMode ? 'Dark Mode' : 'Light Mode' }}
+              </button>
+
+              <div class="border-t border-slate-200 dark:border-zinc-800 my-1 transition-colors"></div>
+
+              <button type="button" (click)="logout()" role="menuitem" class="w-full text-left block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-red-700 dark:hover:text-red-300 transition-colors">
+                Sign Out
+              </button>
+            </div>
+          }
+        </div>
+
+        <!-- Mobile Menu Icon -->
+        <div class="xl:hidden flex items-center">
+          <button type="button" data-tour="mobile-menu" (click)="toggleMobileMenu()" class="text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/10 p-2 rounded-full focus:outline-none transition-colors">
+            @if (!isMobileMenuOpen) {
+              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            } @else {
+              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (isMobileMenuOpen) {
+    <div class="xl:hidden absolute top-full left-0 w-full mt-2 rounded-3xl overflow-hidden bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-slate-200 dark:border-zinc-700 shadow-2xl z-50 transition-colors">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div data-tour="mobile-search-bar" class="px-1 pb-2">
+          <app-search-bar></app-search-bar>
+        </div>
+
+        <a data-tour="nav-dashboard" routerLink="/dashboard" (click)="closeMobileMenu()" class="text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 block px-3 py-2 rounded-xl text-base font-bold transition-colors">Dashboard</a>
+        <a data-tour="nav-calendar" routerLink="/calendar" (click)="closeMobileMenu()" class="text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 block px-3 py-2 rounded-xl text-base font-bold transition-colors">Calendar</a>
+        <a data-tour="nav-budget" routerLink="/budget" (click)="closeMobileMenu()" class="text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 block px-3 py-2 rounded-xl text-base font-bold transition-colors">Budget Planer</a>
+        <a data-tour="nav-chats" routerLink="/chats" (click)="closeMobileMenu()" class="flex items-center gap-2 text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 px-3 py-2 rounded-xl text-base font-bold transition-colors">
+          Chats
+          @if (hasUnreadChats()) {
+            <span class="h-2.5 w-2.5 rounded-full bg-red-500"></span>
+          }
+        </a>
+        <a data-tour="nav-filemanager" routerLink="/filemanager" (click)="closeMobileMenu()" class="text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 block px-3 py-2 rounded-xl text-base font-bold transition-colors">Filemanager</a>
+        <a data-tour="nav-trip-map" routerLink="/trip-map" (click)="closeMobileMenu()" class="text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 block px-3 py-2 rounded-xl text-base font-bold transition-colors">Trip Map</a>
+
+        <div class="border-t border-slate-200 dark:border-zinc-700 my-2"></div>
+
+        <a data-tour="mobile-profile-menu" routerLink="/profile" (click)="closeMobileMenu()" class="text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 block px-3 py-2 rounded-xl text-base font-bold transition-colors">Profile</a>
+        <a routerLink="/email-costs" (click)="closeMobileMenu()" class="text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 block px-3 py-2 rounded-xl text-base font-bold transition-colors">EmailCost</a>
+        <a data-tour="mobile-nav-friends" routerLink="/friends" (click)="closeMobileMenu()" class="text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 block px-3 py-2 rounded-xl text-base font-bold transition-colors">Friends</a>
+
+        <button type="button" (click)="toggleTheme(); closeMobileMenu()" class="w-full text-left text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 block px-3 py-2 rounded-xl text-base font-bold transition-colors">
+          {{ isLightMode ? 'Dark Mode' : 'Light Mode' }}
+        </button>
+
+        <button type="button" (click)="logout()" class="w-full text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 block px-3 py-2 rounded-xl text-base font-bold transition-colors">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  }
+</nav>

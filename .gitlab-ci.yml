@@ -1,0 +1,174 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+
+stages:
+  - lint
+  - test
+  - build
+
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  DOCKER_BUILDKIT: "1"
+  DOCKER_DRIVER: overlay2
+
+.docker_job: &docker_job
+  stage: build
+  image: docker:26
+  services:
+    - name: docker:26-dind
+      alias: docker
+  tags:
+    - dind
+    - ude-sse
+
+.push_template: &push_template
+  <<: *docker_job
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_TAG
+
+build_frontend_check:
+  <<: *docker_job
+  script:
+    - docker build -t frontend-check ./frontend
+  rules:
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+build_backend_check:
+  <<: *docker_job
+  script:
+    - docker build -t backend-check ./backend
+  rules:
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+push_frontend:
+  <<: *push_template
+  script:
+    - IMAGE="$CI_REGISTRY_IMAGE/frontend"
+    - SHA_TAG="$CI_COMMIT_SHORT_SHA"
+    - BRANCH_TAG="$CI_COMMIT_REF_SLUG"
+
+    - docker build -t "$IMAGE:$SHA_TAG" ./frontend
+    - docker push "$IMAGE:$SHA_TAG"
+
+    - |
+      if [ -n "$CI_COMMIT_BRANCH" ]; then
+        docker tag "$IMAGE:$SHA_TAG" "$IMAGE:$BRANCH_TAG"
+        docker push "$IMAGE:$BRANCH_TAG"
+      fi
+
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then
+        docker tag "$IMAGE:$SHA_TAG" "$IMAGE:latest"
+        docker push "$IMAGE:latest"
+      fi
+
+    - |
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        docker tag "$IMAGE:$SHA_TAG" "$IMAGE:$CI_COMMIT_TAG"
+        docker push "$IMAGE:$CI_COMMIT_TAG"
+      fi
+
+push_backend:
+  <<: *push_template
+  script:
+    - IMAGE="$CI_REGISTRY_IMAGE/backend"
+    - SHA_TAG="$CI_COMMIT_SHORT_SHA"
+    - BRANCH_TAG="$CI_COMMIT_REF_SLUG"
+
+    - docker build -t "$IMAGE:$SHA_TAG" ./backend
+    - docker push "$IMAGE:$SHA_TAG"
+
+    - |
+      if [ -n "$CI_COMMIT_BRANCH" ]; then
+        docker tag "$IMAGE:$SHA_TAG" "$IMAGE:$BRANCH_TAG"
+        docker push "$IMAGE:$BRANCH_TAG"
+      fi
+
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then
+        docker tag "$IMAGE:$SHA_TAG" "$IMAGE:latest"
+        docker push "$IMAGE:latest"
+      fi
+
+    - |
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        docker tag "$IMAGE:$SHA_TAG" "$IMAGE:$CI_COMMIT_TAG"
+        docker push "$IMAGE:$CI_COMMIT_TAG"
+      fi
+
+lint_frontend:
+  stage: lint
+  image: node:20
+  tags:
+    - ude-sse
+  before_script:
+    - cd frontend
+    - npm ci
+  script:
+    - npm run lint
+  rules:
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+lint_backend:
+  stage: lint
+  image: eclipse-temurin:21-jdk
+  tags:
+    - ude-sse
+  before_script:
+    - cd backend
+  script:
+    - ./gradlew checkstyleMain
+  rules:
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+test_frontend:
+  stage: test
+  image: cypress/browsers:node-24.0.0-chrome-136.0.7103.92-1-ff-138.0.1-edge-136.0.3240.50-1
+  tags:
+    - ude-sse
+  before_script:
+    - cd frontend
+    - npm ci
+  script:
+    - npm run test -- --watch=false --browsers=ChromeHeadlessNoSandbox
+  rules:
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+test_backend:
+  stage: test
+  image: eclipse-temurin:21-jdk
+  tags:
+    - ude-sse
+  variables:
+    GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .gradle/
+  before_script:
+    - cd backend
+  script:
+    - ./gradlew test
+  rules:
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"

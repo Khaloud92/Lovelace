@@ -1,0 +1,161 @@
+<div class="min-h-screen relative text-slate-900 dark:text-white font-sans overflow-x-hidden pb-20">
+
+  <!-- Chromatic Background -->
+  <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-slate-50 dark:bg-[#09090b] transition-colors duration-500">
+    <div class="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-fuchsia-400 opacity-30 dark:opacity-60 dark:bg-fuchsia-600/30 blur-[120px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+    <div class="absolute top-[20%] -right-[10%] w-[45vw] h-[45vw] rounded-full bg-cyan-300 opacity-40 dark:opacity-60 dark:bg-cyan-500/20 blur-[120px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+    <div class="absolute -bottom-[20%] left-[20%] w-[60vw] h-[60vw] rounded-full bg-indigo-400 opacity-30 dark:opacity-50 dark:bg-indigo-600/30 blur-[140px] mix-blend-screen dark:mix-blend-normal transition-colors"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto p-6 pt-32">
+
+    <div class="dashboard-header mb-8">
+      <h1 class="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-emerald-500 dark:from-blue-400 dark:to-emerald-400 bg-clip-text text-transparent mb-2 drop-shadow-sm">
+        Costs fetched from E-mail
+      </h1>
+      <p class="text-slate-500 dark:text-zinc-400 font-medium">
+        Connect your Gmail mailbox, select a trip, and import travel costs into your budget.
+      </p>
+    </div>
+
+    @if (errorMessage) {
+      <div class="mb-6 rounded-2xl bg-red-100 dark:bg-red-500/10 border border-red-300 dark:border-red-500/30 px-5 py-4 text-red-700 dark:text-red-400 font-bold shadow-sm backdrop-blur-md">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="mb-6 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 border border-emerald-300 dark:border-emerald-500/30 px-5 py-4 text-emerald-700 dark:text-emerald-400 font-bold shadow-sm backdrop-blur-md">
+        {{ successMessage }}
+      </div>
+    }
+
+    <!-- KPI GRID -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="bg-white/40 dark:bg-white/5 backdrop-blur-3xl border border-white/60 dark:border-white/20 rounded-3xl p-6 shadow-xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)] transition-all">
+        <p class="text-xs text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-2 font-bold">Status</p>
+        <p class="text-2xl font-extrabold text-slate-900 dark:text-white drop-shadow-sm">{{ isMailboxConnected() ? 'Connected' : 'Not connected' }}</p>
+        <p class="mt-2 text-sm font-medium" [ngClass]="isMailboxConnected() ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-zinc-500'">
+          {{ mailboxStatus?.emailAddress || 'No mailbox connected yet' }}
+        </p>
+      </div>
+
+      <div class="bg-white/40 dark:bg-white/5 backdrop-blur-3xl border border-white/60 dark:border-white/20 rounded-3xl p-6 shadow-xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)] transition-all">
+        <p class="text-xs text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-2 font-bold">Imported</p>
+        <p class="text-2xl font-extrabold text-slate-900 dark:text-white drop-shadow-sm">{{ emailCosts.length }}</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-zinc-500 font-medium">Items saved from e-mails</p>
+      </div>
+
+      <div class="bg-white/40 dark:bg-white/5 backdrop-blur-3xl border border-white/60 dark:border-white/20 rounded-3xl p-6 shadow-xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)] transition-all">
+        <p class="text-xs text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-2 font-bold">Total</p>
+        <p class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 drop-shadow-sm">
+          {{ totalAmount | currency:'EUR':'symbol':'1.2-2' }}
+        </p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-zinc-500 font-medium">Added to the selected trip</p>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <section class="lg:col-span-1 space-y-6">
+        <!-- Connect Mailbox -->
+        <div class="bg-white/40 dark:bg-white/5 backdrop-blur-3xl border border-white/60 dark:border-white/20 rounded-3xl p-6 shadow-xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)]">
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="text-xl font-extrabold text-slate-900 dark:text-zinc-200">Connect Mailbox</h2>
+            @if (loadingStatus) { <span class="text-xs font-bold text-slate-500 dark:text-zinc-500 animate-pulse">Loading...</span> }
+          </div>
+
+          <label class="block text-xs font-bold text-slate-600 dark:text-zinc-400 mb-1.5 uppercase tracking-wider" for="emailAddress">Gmail address</label>
+          <input id="emailAddress" name="emailAddress" [(ngModel)]="emailAddress" placeholder="name@gmail.com" class="w-full mb-4 bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 rounded-xl px-4 py-3 text-slate-900 dark:text-white text-sm outline-none transition-all shadow-inner backdrop-blur-md" />
+
+          <label class="block text-xs font-bold text-slate-600 dark:text-zinc-400 mb-1.5 uppercase tracking-wider" for="appPassword">Gmail App Password</label>
+          <input id="appPassword" name="appPassword" [(ngModel)]="appPassword" type="password" placeholder="16-character App Password" class="w-full mb-4 bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-emerald-500 rounded-xl px-4 py-3 text-slate-900 dark:text-white text-sm outline-none transition-all shadow-inner backdrop-blur-md" />
+
+          <button (click)="connectMailbox()" [disabled]="connecting" class="w-full bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500/80 dark:hover:bg-emerald-400 border border-emerald-600/50 dark:border-emerald-400/50 text-white font-bold px-4 py-3.5 rounded-xl text-sm transition-all shadow-md backdrop-blur-xl disabled:opacity-40">
+            {{ connecting ? 'Connecting...' : 'Connect Gmail' }}
+          </button>
+
+          @if (isMailboxConnected()) {
+            <button (click)="disconnectMailbox()" [disabled]="disconnecting" class="w-full mt-3 bg-red-100 hover:bg-red-200 dark:bg-red-500/10 dark:hover:bg-red-500/20 border border-red-300 dark:border-red-500/30 text-red-700 dark:text-red-400 font-bold px-4 py-3 rounded-xl text-sm transition-all shadow-sm">
+              {{ disconnecting ? 'Disconnecting...' : 'Disconnect mailbox' }}
+            </button>
+          }
+          <p class="text-slate-500 dark:text-zinc-500 text-xs mt-4 font-medium">Connected at: {{ connectedAtLabel }}</p>
+        </div>
+
+        <!-- Fetch Costs -->
+        <div class="bg-white/40 dark:bg-white/5 backdrop-blur-3xl border border-white/60 dark:border-white/20 rounded-3xl p-6 shadow-xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)]">
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-zinc-200 mb-5">Fetch Costs</h2>
+          <label class="block text-xs font-bold text-slate-600 dark:text-zinc-400 mb-1.5 uppercase tracking-wider" for="tripSelect">Travel entry</label>
+          <select id="tripSelect" name="tripSelect" [(ngModel)]="selectedTravelEntryId" (change)="onTravelEntryChange()" class="w-full mb-4 bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 focus:border-blue-500 rounded-xl px-4 py-3 text-slate-900 dark:text-white text-sm outline-none transition-all shadow-inner backdrop-blur-md">
+            <option value="">Select trip</option>
+            @for (trip of travelEntries; track trip.id) { <option [value]="trip.id">{{ getTravelEntryLabel(trip) }}</option> }
+          </select>
+          @if (selectedTravelEntry; as trip) {
+            <div class="mb-4 bg-white/60 dark:bg-black/40 border border-slate-300 dark:border-white/10 rounded-xl p-3 shadow-inner">
+              <p class="text-slate-900 dark:text-white text-sm font-bold truncate">{{ trip.title || 'Untitled trip' }}</p>
+              <p class="text-slate-500 dark:text-zinc-400 text-xs mt-1 font-medium">{{ trip.destination || 'No destination' }}</p>
+            </div>
+          }
+          <button (click)="fetchCosts()" [disabled]="!canFetchCosts()" class="w-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-500/80 dark:hover:bg-blue-400 border border-blue-600/50 dark:border-blue-400/50 text-white font-bold px-4 py-3.5 rounded-xl text-sm transition-all shadow-md disabled:opacity-40">
+            {{fetching ? 'Fetching...' : 'Fetch from E-mail' }}
+          </button>
+          <button (click)="refreshFromEmail()" [disabled]="!canRefreshFromEmail()" class="w-full mt-3 bg-white/60 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-zinc-300 font-bold px-4 py-3.5 rounded-xl text-sm transition-all shadow-sm">
+            {{ refreshingFromEmail ? 'Refreshing...' : 'Refresh list' }}
+          </button>
+        </div>
+      </section>
+
+      <!-- Fetched Costs List -->
+      <section class="lg:col-span-2 bg-white/40 dark:bg-white/5 backdrop-blur-3xl border border-white/60 dark:border-white/20 rounded-3xl p-8 shadow-xl dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.4)]">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6 border-b border-white/40 dark:border-white/10 pb-6">
+          <div>
+            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white drop-shadow-sm">Fetched Costs</h2>
+            <p class="text-sm font-medium text-slate-500 dark:text-zinc-400">Booking, hotel, train, flight and other travel costs.</p>
+          </div>
+          <span class="text-xs font-bold px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 shadow-inner">
+            {{ emailCosts.length }} items
+          </span>
+        </div>
+
+        @if (loadingCosts) {
+          <div class="flex items-center justify-center min-h-[320px] text-slate-500 dark:text-zinc-500 font-bold">Loading email costs...</div>
+        } @else if (emailCosts.length === 0) {
+          <div class="flex flex-col items-center justify-center min-h-[320px] border border-dashed border-slate-400 dark:border-white/20 rounded-3xl text-slate-500 dark:text-zinc-400 text-center px-6 shadow-inner backdrop-blur-md">
+            <span class="text-4xl mb-3">✉️</span>
+            <p class="text-slate-800 dark:text-zinc-300 font-extrabold">No e-mail costs fetched yet</p>
+            <p class="text-sm mt-1 max-w-md font-medium">Connect your mailbox, choose a trip, then fetch travel costs from your e-mails.</p>
+          </div>
+        } @else {
+          <div class="space-y-4">
+            @for (cost of emailCosts; track cost.id) {
+              <article class="bg-white/60 dark:bg-black/40 border border-slate-300 dark:border-white/10 rounded-2xl p-5 shadow-sm backdrop-blur-md transition-all hover:bg-white/80 dark:hover:bg-black/60 hover:border-emerald-400/50">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 flex-shrink-0 shadow-sm"></span>
+                      <h3 class="text-slate-900 dark:text-white font-extrabold truncate drop-shadow-sm">{{ cost.title || 'Imported travel cost' }}</h3>
+                    </div>
+                    <p class="text-slate-600 dark:text-zinc-400 text-sm mt-1.5 font-medium line-clamp-2">{{ cost.subject || cost.emailText }}</p>
+                    <div class="flex flex-wrap gap-2 mt-4">
+                      <span class="text-[11px] font-bold px-3 py-1 rounded-full bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-500/20 uppercase tracking-wider">{{ cost.category || 'Travel Cost' }}</span>
+                      <span class="text-[11px] font-bold px-3 py-1 rounded-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 text-slate-600 dark:text-zinc-400 uppercase tracking-wider shadow-inner">{{ cost.source || 'E-mail' }}</span>
+                      <span class="text-[11px] font-bold px-3 py-1 rounded-full bg-white/60 dark:bg-black/20 border border-slate-300 dark:border-white/10 text-slate-600 dark:text-zinc-400 uppercase tracking-wider shadow-inner">{{ formatDate(cost.importedAt) }}</span>
+                    </div>
+                  </div>
+                  <div class="text-right flex-shrink-0">
+                    <p class="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 drop-shadow-sm">
+                      {{ cost.amount | currency:cost.currency:'symbol':'1.2-2' }}
+                    </p>
+                    <button type="button" (click)="removeEmailCostFromTrip(cost.id)" [disabled]="!canProcessEmailCost(cost.id)" class="mt-4 text-xs font-bold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 disabled:opacity-50 transition-colors">Remove</button>
+                    <button type="button" (click)="ignoreEmailCostForever(cost.id)" [disabled]="!canProcessEmailCost(cost.id)" class="block ml-auto mt-2 text-xs font-bold text-slate-500 dark:text-zinc-500 hover:text-slate-800 dark:hover:text-zinc-200 disabled:opacity-50 transition-colors">Ignore forever</button>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </section>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+@if (src) {
+  <img
+    [src]="src"
+    alt=""
+    [style.width.px]="size"
+    [style.height.px]="size"
+    class="shrink-0 rounded-full object-cover" />
+} @else {
+  <span
+    [style.width.px]="size"
+    [style.height.px]="size"
+    [style.fontSize.px]="size * 0.42"
+    class="avatar-initial shrink-0 inline-flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-emerald-500 font-bold leading-none select-none">
+    {{ initial }}
+  </span>
+}

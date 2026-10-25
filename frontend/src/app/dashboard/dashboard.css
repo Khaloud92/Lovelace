@@ -1,0 +1,79 @@
+.dashboard-header,
+.trips-section,
+.overview-card {
+  opacity: 0;
+}
+
+.mini-cal:hover .mini-cal-hint {
+  opacity: 1 !important;
+}
+
+/* ── Calendar Responsive Layout ─────────────────────────── */
+
+.calendar-months-scroll {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+/* Scroll-Dots standardmäßig versteckt */
+.calendar-scroll-dots {
+  display: none;
+}
+
+/* ── Mobile: ein Monat, horizontal swipebar ─────────────── */
+@media (max-width: 640px) {
+  .calendar-months-scroll {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.75rem;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .calendar-months-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mini-cal {
+    flex: 0 0 calc(100% - 1.5rem);
+    scroll-snap-align: center;
+    min-width: 0;
+  }
+
+  /* Scroll-Dots sichtbar */
+  .calendar-scroll-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .scroll-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background-color: #3f3f46;
+    transition: background-color 0.2s, transform 0.2s;
+  }
+
+  .scroll-dot.active {
+    background-color: #10b981;
+    transform: scale(1.3);
+  }
+}
+
+/* ── Tablet: 2 Monate nebeneinander ─────────────────────── */
+@media (min-width: 641px) and (max-width: 900px) {
+  .calendar-months-scroll {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mini-cal:nth-child(3) {
+    grid-column: 1 / -1;
+    max-width: calc(50% - 0.375rem);
+  }
+}

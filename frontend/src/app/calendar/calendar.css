@@ -1,0 +1,72 @@
+/* --- Basis: Kalender transparent machen, damit dein Hintergrund durchscheint --- */
+.cal-month-view,
+.cal-week-view,
+.cal-day-view {
+  background-color: transparent !important;
+}
+
+/* --- LIGHT MODE: Korrektur --- */
+/* Wir erzwingen einen hellen Hintergrund, statt das Schwarz-Standard-Design zu lassen */
+:not(.dark) .cal-month-view {
+  background-color: transparent !important;
+}
+
+:not(.dark) .cal-month-view .cal-header .cal-cell {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  color: #1f2937 !important;
+}
+
+:not(.dark) .cal-month-view .cal-cell-row .cal-cell {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  color: #1f2937 !important;
+}
+
+:not(.dark) .cal-day-number {
+  color: #1f2937 !important;
+}
+/* Light Mode Hover: Sehr subtiles Grau, damit es hell bleibt */
+:not(.dark) .cal-month-view .cal-cell:hover,
+:not(.dark) .cal-month-view .cal-cell.cal-has-events:hover {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  transition: background-color 0.2s ease !important;
+}
+
+/* Dark Mode Hover: Subtles Emerald-Leuchten, das zum Branding passt */
+.dark .cal-month-view .cal-cell:hover,
+.dark .cal-month-view .cal-cell.cal-has-events:hover {
+  background-color: rgba(16, 185, 129, 0.08) !important; /* Hier das sanfte Grün */
+  transition: background-color 0.2s ease !important;
+}
+
+/* Optional: Damit der "Heute"-Marker (der heute-Tag) nicht überlagert wird */
+.cal-month-view .cal-day-cell.cal-today:hover {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+/* --- DARK MODE: Korrektur --- */
+.dark .cal-month-view .cal-header .cal-cell {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  color: #e4e4e7 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .cal-month-view .cal-cell-row .cal-cell {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  color: #e4e4e7 !important;
+}
+
+.dark .cal-day-number {
+  color: #e4e4e7 !important;
+}
+
+/* Aktueller Tag */
+.cal-month-view .cal-day-cell.cal-today {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Rahmen entfernen, um den Glas-Look nicht zu stören */
+.cal-month-view .cal-days,
+.cal-month-view .cal-cell-row,
+.cal-month-view .cal-cell {
+  border-color: rgba(156, 163, 175, 0.1) !important;
+}
